@@ -130,6 +130,18 @@ function Intro() {
         <span className="mr-2 inline-block h-1.5 w-1.5 rounded-full bg-accent align-middle" />
         {profile.status}
       </p>
+      <p className="mt-3 max-w-xl">
+        If you’d rather have all of this on one tidy page,{' '}
+        <a
+          href={profile.resume}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-accent hover:underline underline-offset-4"
+        >
+          here’s my resume
+        </a>
+        .
+      </p>
       <div className="mt-5 flex gap-5 font-mono text-xs">
         <ExternalLink href={profile.github}>GitHub</ExternalLink>
         <ExternalLink href={profile.linkedin}>LinkedIn</ExternalLink>
@@ -138,6 +150,14 @@ function Intro() {
           className="text-accent hover:underline underline-offset-4"
         >
           Email
+        </a>
+        <a
+          href={profile.resume}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-accent hover:underline underline-offset-4"
+        >
+          Resume
         </a>
       </div>
 

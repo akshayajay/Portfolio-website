@@ -3,7 +3,7 @@ export const profile = {
   tagline: 'Hi, I’m Shravya.',
   intro: [
     'I’m a CS master’s student at Brown University. I spend most of my time building AI systems and then making sure they actually keep working — a debugger for LLM agents, a RAG pipeline that notices when it’s gone stale, an AI mental-health companion that ended up with a patent.',
-    'When I’m not debugging agents, I’m usually deep in a fantasy series — books or shows, ideally with dragons in them.',
+    'When I’m not debugging agents, I’m usually deep in a fantasy series — books or shows, the longer the better.',
   ],
   projectsIntro:
     'A running list of what I’ve been building. Everything links to real code, and a couple of things have live demos you can poke at.',
@@ -22,7 +22,8 @@ export const profile = {
   email: 'shravya_munugala@brown.edu',
   github: 'https://github.com/Shravya29M',
   linkedin: 'https://linkedin.com/in/shravya29M',
-  status: 'Right now: SWE intern at Kilowant + research at Brown. Open to SWE and ML roles.',
+  status: 'Right now: SWE intern at Kilowant + research at Brown.',
+  resume: '/resume.pdf',
 };
 
 export const experience = [
