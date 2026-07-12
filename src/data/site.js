@@ -3,7 +3,7 @@ export const profile = {
   tagline: 'Hi, I’m Shravya.',
   intro: [
     'I’m a CS master’s student at Brown University. I spend most of my time building AI systems and then making sure they actually keep working — a debugger for LLM agents, a RAG pipeline that notices when it’s gone stale, an AI mental-health companion that ended up with a patent.',
-    'When I’m not debugging agents, I’m usually deep in a fantasy series — books or shows, ideally the kind that open with a map.',
+    'When I’m not debugging agents, I’m usually deep in a fantasy series — something with at least five books and a fandom wiki.',
   ],
   projectsIntro:
     'A running list of what I’ve been building. Everything links to real code, and a couple of things have live demos you can poke at.',
