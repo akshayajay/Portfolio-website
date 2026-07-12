@@ -92,6 +92,7 @@ export const projects = [
     ],
     gif: 'https://raw.githubusercontent.com/Shravya29M/agentrewind/main/docs/demo.gif',
     gifAlt: 'Recording two agent runs and diffing them in the terminal',
+    tryIt: 'pip install llm-run-recorder',
     sections: [
       {
         heading: 'Background',
@@ -153,6 +154,9 @@ export const projects = [
     links: [
       { label: 'GitHub', href: 'https://github.com/Shravya29M/RAG-Drift_Detection' },
     ],
+    tryIt: `git clone https://github.com/Shravya29M/RAG-Drift_Detection && cd RAG-Drift_Detection
+docker-compose up --build -d
+curl -X POST "http://localhost:8000/drift/simulate?windows=3"  # watch an incident open`,
     sections: [
       {
         heading: 'Background',
@@ -176,6 +180,41 @@ export const projects = [
           'Documents are ingested, chunked, and embedded into a FAISS index; queries retrieve top-k chunks that are passed to an LLM through a provider router. In the background, a drift monitor projects query embeddings onto a PCA basis fitted on the indexed corpus, calibrates a baseline from the first window of real traffic, and compares each subsequent 50-query window against it with per-dimension two-sample KS tests (Bonferroni-corrected).',
           'Hysteresis prevents single noisy windows from raising alarms. When drift is sustained, escalation is quality-gated: healthy retrieval scores mean a benign topic shift (webhook alert, baseline recalibrated, no re-index), while degraded scores mean staleness and trigger an automatic re-index. The FAISS store supports A/B index swaps under a lock so re-indexing never blocks live queries.',
         ],
+      },
+      {
+        heading: 'Architecture',
+        pre: `  Documents (PDF / MD / TXT / URL)
+          │
+          ▼
+  ┌───────────────┐       ┌─────────────────────────────────────┐
+  │   Ingestion   │       │           Drift Monitor             │
+  │  parse →      │       │                                     │
+  │  chunk →      │  vecs │  query vecs                         │
+  │  embed        │──────▶│  ──────────▶ DriftScheduler         │
+  └──────┬────────┘       │                  │ queue            │
+         │ chunks+vecs    │                  ▼                  │
+         ▼                │           DriftDetector             │
+  ┌─────────────┐         │        (rolling window,             │
+  │  FAISSStore │         │         PCA + KS test,              │
+  │  (A/B swap, │         │         hysteresis)                 │
+  │  RLock)     │◀────────│                  │ DriftResult      │
+  └──────┬──────┘ reindex │                  ▼                  │
+         │                │            DriftAlarm               │
+         │ top-k search   │    SOFT ──▶ W&B log                 │
+         ▼                │    HARD ──▶ webhook POST            │
+  ┌─────────────┐         │    AUTO ──▶ re-index callback       │
+  │  Retriever  │         └─────────────────────────────────────┘
+  └──────┬──────┘
+         │ chunks              ┌──────────────────────────┐
+         ▼                     │  CLI (rag ingest/query/  │
+  ┌─────────────┐              │      drift-status/       │
+  │  LLMRouter  │              │      reindex)            │
+  │  (OpenAI /  │              └──────────────────────────┘
+  │  Anthropic) │
+  └──────┬──────┘
+         │ answer
+         ▼
+    FastAPI  :8000`,
       },
       {
         heading: 'Testing & Results',
@@ -214,6 +253,15 @@ export const projects = [
       { label: 'Live demo', href: 'https://elyssa-ijm1.onrender.com' },
       { label: 'GitHub', href: 'https://github.com/Shravya29M/Elyssa' },
     ],
+    image: {
+      src: '/images/elyssa.png',
+      alt: 'The Elyssa live demo — chat UI with a simulated facial emotion selector and conflict detector',
+      caption:
+        'The live demo. The free tier can’t run the GPU vision model, so a dropdown stands in for your face — the sentiment and conflict-detection pipeline behind it is real.',
+    },
+    tryIt: `git clone https://github.com/Shravya29M/Elyssa.git && cd Elyssa
+docker compose -f docker-compose.mock.yml up --build   # full 5-service stack, no GPU needed
+# open http://localhost:7860`,
     sections: [
       {
         heading: 'Background',
@@ -275,6 +323,12 @@ export const projects = [
       { label: 'GitHub', href: 'https://github.com/Shravya29M/VizPublicTrust' },
       { label: 'Full write-up', href: 'https://www.gordanmilovac.com/posts/PublicTrust' },
     ],
+    image: {
+      src: '/images/vizpublictrust.png',
+      alt: 'The UMAP explorer view — agencies plotted by trust score with warmth-colored glyphs',
+      caption:
+        'The UMAP explorer in the live demo — every circle is a federal agency, colored by perceived warmth, positioned by trust.',
+    },
     sections: [
       {
         heading: 'Background',

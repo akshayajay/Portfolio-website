@@ -390,6 +390,31 @@ function ProjectPost() {
         />
       )}
 
+      {project.image && (
+        <figure className="mt-8">
+          <img
+            src={project.image.src}
+            alt={project.image.alt}
+            loading="lazy"
+            className="w-full rounded-md border border-hairline"
+          />
+          <figcaption className="mt-2 font-mono text-xs text-faint">
+            {project.image.caption}
+          </figcaption>
+        </figure>
+      )}
+
+      {project.tryIt && (
+        <div className="mt-8">
+          <p className="mb-2 font-mono text-xs uppercase tracking-[0.2em] text-faint">
+            Try it
+          </p>
+          <pre className="overflow-x-auto rounded-md border border-hairline bg-white/60 px-4 py-3 font-mono text-xs leading-6">
+            {project.tryIt}
+          </pre>
+        </div>
+      )}
+
       {project.sections.map((section) => (
         <section key={section.heading} className="mt-12">
           <h2 className="mb-4 text-lg font-semibold tracking-tight">
@@ -400,6 +425,11 @@ function ProjectPost() {
               {para}
             </p>
           ))}
+          {section.pre && (
+            <pre className="overflow-x-auto rounded-md border border-hairline bg-white/60 px-4 py-3 font-mono text-xs leading-5">
+              {section.pre}
+            </pre>
+          )}
           {section.bullets && (
             <ul className="mt-3 space-y-1.5 first:mt-0">
               {section.bullets.map((b) => (
