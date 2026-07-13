@@ -3,7 +3,7 @@ export const profile = {
   tagline: 'Hi, I’m Shravya.',
   intro: [
     'I’m a CS master’s student at Brown University. I spend most of my time building AI systems and then making sure they actually keep working: a debugger for LLM agents, a RAG pipeline that notices when it’s gone stale, an AI mental-health companion that ended up with a patent.',
-    'When I’m not debugging agents, I’m usually deep in a fantasy series, something with at least five books and a fandom wiki, or planning the next trip somewhere new.',
+    'When I’m not debugging agents, I’m usually deep in a fantasy series, something with at least five books and a fandom wiki, or planning a trip. I plan trips the way I plan projects: over-researched, under-budgeted.',
   ],
   projectsIntro:
     'A running list of what I’ve been building. Everything links to real code, and a couple of things have live demos you can poke at.',
@@ -25,6 +25,100 @@ export const profile = {
   status: 'Right now: SWE intern at Kilowant + research at Brown.',
   resume: '/resume.pdf',
 };
+
+// Pins for the scrapbook map. Every pin gets a one-line memory (`note`)
+// shown on hover. Country/state-level visits are pinned on a representative city.
+export const places = [
+  // India
+  { name: 'Hyderabad', lat: 17.39, lng: 78.49, note: 'Home. Still the city whose food wins every debate.' },
+  { name: 'Chennai', lat: 13.08, lng: 80.27, note: 'Where I spent my college years.' },
+  { name: 'Kerala', lat: 9.93, lng: 76.26, note: 'Backwaters, coconut everything, zero regrets.' },
+  { name: 'Andhra Pradesh', lat: 16.51, lng: 80.65, note: 'Spice levels I still brag about surviving.' },
+  { name: 'Delhi', lat: 28.61, lng: 77.21, note: 'History every hundred meters, chaos in between.' },
+  { name: 'Rajasthan', lat: 26.91, lng: 75.79, note: 'Forts, deserts, and unreasonable sunsets.' },
+  { name: 'Maharashtra', lat: 19.08, lng: 72.88, note: 'Mumbai moves fast. I mostly just watched.' },
+  { name: 'Uttar Pradesh', lat: 27.18, lng: 78.02, note: 'Yes, the Taj is worth the hype.' },
+  { name: 'Goa', lat: 15.49, lng: 73.83, note: 'Beach brain: activated.' },
+  { name: 'Karnataka', lat: 12.97, lng: 77.59, note: 'Bengaluru traffic taught me patience.' },
+  // Europe
+  { name: 'France', lat: 48.86, lng: 2.35, note: 'Paris looked exactly like the movies promised.' },
+  { name: 'Nice', lat: 43.71, lng: 7.26, note: 'The sea really is that blue.' },
+  { name: 'Rome', lat: 41.9, lng: 12.5, note: 'Probably consumed more gelato than water.' },
+  { name: 'Switzerland', lat: 47.37, lng: 8.54, note: 'Convinced me trains should always be this punctual.' },
+  { name: 'Germany', lat: 48.14, lng: 11.58, note: 'Pretzels the size of my head.' },
+  { name: 'Prague', lat: 50.08, lng: 14.44, note: 'A city that looks permanently lit for a film.' },
+  { name: 'Vienna', lat: 48.21, lng: 16.37, note: 'Cafés that take dessert very, very seriously.' },
+  { name: 'Salzburg', lat: 47.81, lng: 13.04, note: 'The hills are, in fact, alive.' },
+  { name: 'Hallstatt', lat: 47.56, lng: 13.65, note: 'Looked too pretty to be real.' },
+  { name: 'Budapest', lat: 47.5, lng: 19.04, note: 'The parliament at night made me forget to take a photo.' },
+  { name: 'Croatia', lat: 42.65, lng: 18.09, note: 'Accidentally toured half the Game of Thrones sets.' },
+  { name: 'Bosnia', lat: 43.86, lng: 18.41, note: 'Quietly the most underrated stop of the trip.' },
+  { name: 'Montenegro', lat: 42.42, lng: 18.77, note: 'Small country, unreasonable scenery.' },
+  // Asia & the Middle East
+  { name: 'Thailand', lat: 13.76, lng: 100.5, note: 'Street food completely spoiled me.' },
+  { name: 'Singapore', lat: 1.35, lng: 103.82, note: 'So clean it made me self-conscious.' },
+  { name: 'Malaysia', lat: 3.14, lng: 101.69, note: 'Came for the towers, stayed for the food courts.' },
+  { name: 'Dubai', lat: 25.2, lng: 55.27, note: 'Everything is the world’s biggest something.' },
+  { name: 'Abu Dhabi', lat: 24.45, lng: 54.38, note: 'The Grand Mosque earns the word grand.' },
+  { name: 'Baku', lat: 40.41, lng: 49.87, note: 'Everyone asks why. It was great, that’s why.' },
+  // Americas
+  { name: 'Providence', lat: 41.82, lng: -71.41, note: 'Where I accidentally became an AI researcher.' },
+  { name: 'Boston', lat: 42.36, lng: -71.06, note: 'Autumn here almost makes the winter forgivable.' },
+  { name: 'New York City', lat: 40.71, lng: -74.01, note: 'Loud, chaotic, and somehow charming anyway.' },
+  { name: 'New Jersey', lat: 40.22, lng: -74.75, note: 'The quiet counterweight to the city next door.' },
+  { name: 'Punta Cana', lat: 18.58, lng: -68.4, note: 'Did absolutely nothing. Five stars.' },
+];
+
+export const placesIntro =
+  'The rest of this site is what I build. This page is the scrapbook: the places, books, shows, and frankly concerning amounts of coffee that happen around the building.';
+
+// The little card next to the coffee one. Easy to update, meant to go stale.
+export const placesCurrently = [
+  ['reading', 'Fourth Wing, Rebecca Yarros'],
+  ['watching', 'Game of Thrones (again)'],
+  ['building', 'AgentRewind, between espressos'],
+  ['dreaming of', 'Japan in cherry-blossom season'],
+];
+
+export const coffeeStatus = [
+  ['currently', 'iced latte'],
+  ['favorite', 'Vietnamese iced coffee'],
+  ['stance', 'iced > hot, no exceptions'],
+  ['coding fuel', '100%'],
+];
+
+export const funStats = [
+  ['coffee consumed while coding', '∞'],
+  ['books bought', 'more than books finished'],
+  ['“just one more episode”', 'a number I won’t disclose'],
+  ['bugs fixed', 'hopefully more than I created'],
+];
+
+export const randomLikes = [
+  '☕ coffee',
+  '📚 bookstores',
+  '🌧 rainy weather',
+  '✈ airport windows',
+  '🌅 sunsets',
+  '🧋 cute cafés',
+  '🎧 music while coding',
+  '📖 fantasy with a map in the front',
+];
+
+// Spines on the shelf. Muted colors only; the last book leans.
+export const shelfBooks = [
+  { title: 'A Game of Thrones', author: 'George R.R. Martin', color: '#8da28a' },
+  { title: 'The Name of the Wind', author: 'Patrick Rothfuss', color: '#b98f76' },
+  { title: 'Mistborn', author: 'Brandon Sanderson', color: '#7e8ca3' },
+  { title: 'Six of Crows', author: 'Leigh Bardugo', color: '#c9b48a' },
+  { title: 'Fourth Wing', author: 'Rebecca Yarros', color: '#a48a9e' },
+];
+
+export const shows = [
+  { title: 'Game of Thrones', note: 'rewatch number three, no regrets' },
+  { title: 'House of the Dragon', note: 'for the dragons, obviously' },
+  { title: 'Grey’s Anatomy', note: 'the comfort show, all umpteen seasons' },
+];
 
 export const experience = [
   {
