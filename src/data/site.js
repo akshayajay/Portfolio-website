@@ -2,19 +2,19 @@ export const profile = {
   name: 'Shravya Munugala',
   tagline: 'Hi, I’m Shravya.',
   intro: [
-    'I’m a CS master’s student at Brown University. I spend most of my time building AI systems and then making sure they actually keep working — a debugger for LLM agents, a RAG pipeline that notices when it’s gone stale, an AI mental-health companion that ended up with a patent.',
-    'When I’m not debugging agents, I’m usually deep in a fantasy series — something with at least five books and a fandom wiki.',
+    'I’m a CS master’s student at Brown University. I spend most of my time building AI systems and then making sure they actually keep working: a debugger for LLM agents, a RAG pipeline that notices when it’s gone stale, an AI mental-health companion that ended up with a patent.',
+    'When I’m not debugging agents, I’m usually deep in a fantasy series, something with at least five books and a fandom wiki, or planning the next trip somewhere new.',
   ],
   projectsIntro:
     'A running list of what I’ve been building. Everything links to real code, and a couple of things have live demos you can poke at.',
   workIntro:
-    'Internships and research jobs so far — plus where I’ve studied. The short version: I like teams where I can own something end to end.',
+    'Internships and research jobs so far, plus where I’ve studied. The short version: I like teams where I can own something end to end.',
   researchIntro:
     'The papers and the patent that came out of my projects. Each one links to the real thing, not a PDF on my laptop.',
   skillsIntro:
-    'Some of the languages, tools, and topics I’ve picked up along the way — through classes, internships, and mostly through building the things on the projects page.',
+    'Some of the languages, tools, and topics I’ve picked up along the way, through classes, internships, and mostly through building the things on the projects page.',
   currently: [
-    ['building', 'AgentRewind — a flight recorder for LLM agents'],
+    ['building', 'AgentRewind, a flight recorder for LLM agents'],
     ['reading', 'Fourth Wing, Rebecca Yarros'],
     ['watching', 'Game of Thrones (again)'],
     ['noticing', 'a clear dragon theme in the two lines above'],
@@ -32,7 +32,7 @@ export const experience = [
     company: 'Kilowant',
     date: 'Summer 2026',
     summary:
-      'I’m building the admin dashboard for an energy procurement platform — and the data plumbing behind it.',
+      'I’m building the admin dashboard for an energy procurement platform, and the data plumbing behind it.',
     bullets: [
       'Built an Angular/TypeScript admin dashboard for an energy procurement platform, consolidating buyer, supplier, advisor, contract, and utility data into operational analytics views.',
       'Developed a Node.js data pipeline to clean, transform, and validate production SQL exports into lightweight JSON datasets consumed by the frontend.',
@@ -43,7 +43,7 @@ export const experience = [
   {
     role: 'Research Assistant',
     company: 'Brown University',
-    date: 'Feb 2026 – Present',
+    date: 'Feb 2026 - Present',
     summary:
       'I check whether parents can actually find special-education resources on 900+ school district websites, using browser automation that navigates the way a real person would.',
     bullets: [
@@ -56,7 +56,7 @@ export const experience = [
   {
     role: 'Cloud Computing Intern',
     company: 'Pentabrains Solutions',
-    date: 'Apr – Jul 2025',
+    date: 'Apr - Jul 2025',
     summary: 'Serverless APIs on AWS, and the CI/CD pipelines around them.',
     bullets: [
       'Designed and deployed serverless REST APIs with AWS Lambda and API Gateway, reducing query latency by 20%.',
@@ -67,7 +67,7 @@ export const experience = [
   {
     role: 'Research Intern',
     company: 'Center for Healthcare Advancement, Innovation and Research',
-    date: 'May – Dec 2024',
+    date: 'May - Dec 2024',
     summary: 'Deep-learning pipelines for 3D medical imaging.',
     bullets: [
       'Implemented scalable TensorFlow deep-learning pipelines for processing and classifying 3D medical imaging data.',
@@ -97,14 +97,14 @@ export const projects = [
       {
         heading: 'Background',
         paragraphs: [
-          '“It worked yesterday — why is it different today?” is the defining debugging problem of agent development. An agent run is a chain of nondeterministic LLM calls and tool invocations, so when behavior changes after a prompt tweak or a model update, there is usually no way to reproduce the old run, let alone pinpoint where the new one went off course.',
+          '“It worked yesterday. Why is it different today?” is the defining debugging problem of agent development. An agent run is a chain of nondeterministic LLM calls and tool invocations, so when behavior changes after a prompt tweak or a model update, there is usually no way to reproduce the old run, let alone pinpoint where the new one went off course.',
           'Existing tracing tools show you what happened. AgentRewind also lets you re-execute what happened and compare runs structurally. It is published on PyPI as llm-run-recorder, with a stdlib-only core.',
         ],
       },
       {
         heading: 'Project Goal',
         bullets: [
-          'Record every LLM and tool call an agent makes with near-zero setup — no account, no server, traces stored locally.',
+          'Record every LLM and tool call an agent makes with near-zero setup: no account, no server, traces stored locally.',
           'Replay a recorded run deterministically: no API calls, no cost, no nondeterminism.',
           'Diff two runs structurally and surface the first point where their behavior diverged.',
           'Keep the core dependency-free so it can be dropped into any Python agent codebase.',
@@ -114,8 +114,8 @@ export const projects = [
         heading: 'How It Works',
         paragraphs: [
           'A @traced decorator and a trace() context manager build a span tree for each run. Provider instrumentation for OpenAI- and Anthropic-compatible clients captures requests, responses, latency, tool calls, and token usage automatically, and everything persists to a local SQLite database.',
-          'Replay mode serves recorded responses back to the agent instead of hitting the API, which makes runs reproducible and free to re-execute. The diff engine compares two span trees structurally — same tools called? same arguments? same order? — and reports the first behavioral divergence, which is far more useful than a text diff of transcripts when reviewing a prompt or tool change.',
-          'For production traffic, an opt-in redaction policy recursively strips API keys, tokens, and other credential-shaped data from trace metadata and payloads before anything touches disk — balancing reproducibility with privacy.',
+          'Replay mode serves recorded responses back to the agent instead of hitting the API, which makes runs reproducible and free to re-execute. The diff engine compares two span trees structurally (same tools called? same arguments? same order?) and reports the first behavioral divergence, which is far more useful than a text diff of transcripts when reviewing a prompt or tool change.',
+          'For production traffic, an opt-in redaction policy recursively strips API keys, tokens, and other credential-shaped data from trace metadata and payloads before anything touches disk, balancing reproducibility with privacy.',
         ],
       },
       {
@@ -128,7 +128,7 @@ export const projects = [
         heading: 'What Worked and What Didn’t',
         bullets: [
           'Worked: keeping the core stdlib-only made installation trivial and removed a whole class of dependency conflicts.',
-          'Worked: local-first SQLite storage — no infrastructure to stand up before you can start debugging.',
+          'Worked: local-first SQLite storage: no infrastructure to stand up before you can start debugging.',
           'Hard: matching spans between two runs that took different paths is genuinely difficult; the diff heuristics took several iterations before divergence reports felt trustworthy.',
           'Hard: capturing streaming responses cleanly without altering the behavior of the code under trace.',
         ],
@@ -150,7 +150,7 @@ export const projects = [
     date: '2026',
     stack: 'Python · FastAPI · FAISS · Prometheus',
     oneLiner:
-      'A RAG pipeline that watches itself after deployment. It can tell “users are asking about new things” apart from “my index has gone stale” — and only re-indexes for the second one.',
+      'A RAG pipeline that watches itself after deployment. It can tell “users are asking about new things” apart from “my index has gone stale”, and it only re-indexes for the second one.',
     links: [
       { label: 'GitHub', href: 'https://github.com/Shravya29M/RAG-Drift_Detection' },
     ],
@@ -162,7 +162,7 @@ curl -X POST "http://localhost:8000/drift/simulate?windows=3"  # watch an incide
         heading: 'Background',
         paragraphs: [
           'Most RAG portfolio projects stop right after deployment. This one focuses on what happens after it goes live: user queries evolve, the indexed corpus ages, and retrieval quality quietly degrades with nobody watching.',
-          'The key design insight is that drift alone never means the index is stale. Users asking about a new topic the corpus already covers is not a failure — so alerting on embedding drift by itself just produces false alarms. DriftGuard gates every escalation on retrieval quality.',
+          'The key design insight is that drift alone never means the index is stale. Users asking about a new topic the corpus already covers is not a failure, so alerting on embedding drift by itself just produces false alarms. DriftGuard gates every escalation on retrieval quality.',
         ],
       },
       {
@@ -170,7 +170,7 @@ curl -X POST "http://localhost:8000/drift/simulate?windows=3"  # watch an incide
         bullets: [
           'Detect when incoming query traffic drifts away from the distribution the index was built for.',
           'Distinguish benign topic shifts (drift with healthy retrieval scores) from genuine staleness (drift with degraded retrieval).',
-          'Escalate in stages — log, webhook alert, automatic re-index — without paging anyone for a false alarm.',
+          'Escalate in stages (log, webhook alert, automatic re-index) without paging anyone for a false alarm.',
           'Make the whole loop observable and testable, not a black box.',
         ],
       },
@@ -225,7 +225,7 @@ curl -X POST "http://localhost:8000/drift/simulate?windows=3"  # watch an incide
       {
         heading: 'What Worked and What Didn’t',
         bullets: [
-          'Worked: quality-gating the escalation — it is the difference between a monitoring system people trust and one they mute.',
+          'Worked: quality-gating the escalation. It is the difference between a monitoring system people trust and one they mute.',
           'Worked: hysteresis across windows killed nearly all single-window false positives.',
           'Didn’t: the embedding model loads on construction, so the first request after a cold start has multi-second latency and model weights are fetched at runtime instead of being baked into the Docker image.',
           'Didn’t: the in-process queue and APScheduler pattern means ingest and drift-check jobs do not survive process restarts.',
@@ -245,19 +245,19 @@ curl -X POST "http://localhost:8000/drift/simulate?windows=3"  # watch an incide
     slug: 'elyssa',
     title: 'Elyssa',
     tag: 'Research · Patent',
-    date: '2024 – 2025',
+    date: '2024 - 2025',
     stack: 'FastAPI · Docker · Kubernetes · LLMs',
     oneLiner:
-      'An AI mental-health companion that reads both your words and your face. Five microservices on Kubernetes — and it earned a patent.',
+      'An AI mental-health companion that reads both your words and your face. Five microservices on Kubernetes, and it earned a patent.',
     links: [
       { label: 'Live demo', href: 'https://elyssa-ijm1.onrender.com' },
       { label: 'GitHub', href: 'https://github.com/Shravya29M/Elyssa' },
     ],
     image: {
       src: '/images/elyssa.png',
-      alt: 'The Elyssa live demo — chat UI with a simulated facial emotion selector and conflict detector',
+      alt: 'The Elyssa live demo: chat UI with a simulated facial emotion selector and conflict detector',
       caption:
-        'The live demo. The free tier can’t run the GPU vision model, so a dropdown stands in for your face — the sentiment and conflict-detection pipeline behind it is real.',
+        'The live demo. The free tier can’t run the GPU vision model, so a dropdown stands in for your face, but the sentiment and conflict-detection pipeline behind it is real.',
     },
     tryIt: `git clone https://github.com/Shravya29M/Elyssa.git && cd Elyssa
 docker compose -f docker-compose.mock.yml up --build   # full 5-service stack, no GPU needed
@@ -266,7 +266,7 @@ docker compose -f docker-compose.mock.yml up --build   # full 5-service stack, n
       {
         heading: 'Background',
         paragraphs: [
-          'Mental-health support is hard to access, and text-only chatbots miss half the signal: how someone looks when they say “I’m fine” often matters more than the words. Elyssa combines real-time facial emotion detection with text sentiment analysis to deliver context-aware, empathetic responses — and flags conflicts between the two channels.',
+          'Mental-health support is hard to access, and text-only chatbots miss half the signal: how someone looks when they say “I’m fine” often matters more than the words. Elyssa combines real-time facial emotion detection with text sentiment analysis to deliver context-aware, empathetic responses, and flags conflicts between the two channels.',
           'The engineering bet was that this should be built like a production system, not a notebook demo. The work led to Indian Patent No. 202541093582A (Interactive System for Emotional Well-Being and Assisted Care, Oct 2025).',
         ],
       },
@@ -275,13 +275,13 @@ docker compose -f docker-compose.mock.yml up --build   # full 5-service stack, n
         bullets: [
           'Fuse vision-based emotion detection and text sentiment into a single conversational response pipeline.',
           'Architect the system so the heavy GPU inference scales independently of the lightweight services.',
-          'Make every failure mode observable and recoverable — this is a domain where silent failures are unacceptable.',
+          'Make every failure mode observable and recoverable. This is a domain where silent failures are unacceptable.',
         ],
       },
       {
         heading: 'Architecture',
         paragraphs: [
-          'Elyssa runs as five FastAPI services on Kubernetes behind an NGINX ingress: a Gradio frontend, a gateway orchestrator, a vision inference service (Llama 3.2-11B Vision for emotion detection), a sentiment service, and a response service (a mental-health-tuned Llama 3.2-3B). The gateway owns the orchestration logic — circuit breakers, retries, and timeout budgets — and each service has its own horizontal pod autoscaler, so the GPU-heavy inference service scales separately from everything else.',
+          'Elyssa runs as five FastAPI services on Kubernetes behind an NGINX ingress: a Gradio frontend, a gateway orchestrator, a vision inference service (Llama 3.2-11B Vision for emotion detection), a sentiment service, and a response service (a mental-health-tuned Llama 3.2-3B). The gateway owns the orchestration logic (circuit breakers, retries, and timeout budgets), and each service has its own horizontal pod autoscaler, so the GPU-heavy inference service scales separately from everything else.',
           'A docker-compose mock mode runs the full five-service stack locally with mocked LLMs in about two minutes, which is what made the system practical to develop and test without a GPU.',
         ],
       },
@@ -289,13 +289,13 @@ docker compose -f docker-compose.mock.yml up --build   # full 5-service stack, n
         heading: 'Reliability & Testing',
         paragraphs: [
           'Regression tests cover API contracts, prompt construction, health endpoints, and failure recovery using mocked LLM dependencies, with GitHub Actions running the suite in CI. Readiness probes and Prometheus metrics make the services observable in the cluster.',
-          'The most instructive bug: a sentiment regression caused by generic lexicons misclassifying common mental-health language (phrases like “I’m struggling” scored as far more negative than users meant them). The fix was domain-specific sentiment rules — plus regression tests so it stays fixed.',
+          'The most instructive bug: a sentiment regression caused by generic lexicons misclassifying common mental-health language (phrases like “I’m struggling” scored as far more negative than users meant them). The fix was domain-specific sentiment rules, plus regression tests so it stays fixed.',
         ],
       },
       {
         heading: 'What Worked and What Didn’t',
         bullets: [
-          'Worked: the microservice split — model swaps and scaling decisions never required touching the rest of the system.',
+          'Worked: the microservice split: model swaps and scaling decisions never required touching the rest of the system.',
           'Worked: mock-first local development kept the iteration loop fast despite two large models in the architecture.',
           'Didn’t: the free-tier live demo cannot run the GPU vision model, so facial emotion is a dropdown stand-in there (the sentiment and conflict-detection pipeline is real).',
           'Hard: keeping per-turn latency acceptable while every message crosses multiple service boundaries.',
@@ -317,7 +317,7 @@ docker compose -f docker-compose.mock.yml up --build   # full 5-service stack, n
     date: 'Dec 2025',
     stack: 'JavaScript · D3.js · UMAP',
     oneLiner:
-      'An interactive way to explore a big public-trust survey — UMAP clusters plus little radial glyphs. We tested it on 25 real people and it genuinely was faster.',
+      'An interactive way to explore a big public-trust survey: UMAP clusters plus little radial glyphs. We tested it on 25 real people and it genuinely was faster.',
     links: [
       { label: 'Live demo', href: 'https://viz.gordanmilovac.com' },
       { label: 'GitHub', href: 'https://github.com/Shravya29M/VizPublicTrust' },
@@ -325,15 +325,15 @@ docker compose -f docker-compose.mock.yml up --build   # full 5-service stack, n
     ],
     image: {
       src: '/images/vizpublictrust.png',
-      alt: 'The UMAP explorer view — agencies plotted by trust score with warmth-colored glyphs',
+      alt: 'The UMAP explorer view: agencies plotted by trust score with warmth-colored glyphs',
       caption:
-        'The UMAP explorer in the live demo — every circle is a federal agency, colored by perceived warmth, positioned by trust.',
+        'The UMAP explorer in the live demo. Every circle is a federal agency, colored by perceived warmth, positioned by trust.',
     },
     sections: [
       {
         heading: 'Background',
         paragraphs: [
-          'Public-trust survey data is high-dimensional — dozens of institutional-trust dimensions per respondent — and the standard tools (parallel coordinates, heatmaps) make cross-cluster comparison painful. This was the final project for Brown’s Interdisciplinary Scientific Visualization course (CSCI 2370), built with course teammates.',
+          'Public-trust survey data is high-dimensional (dozens of institutional-trust dimensions per respondent), and the standard tools (parallel coordinates, heatmaps) make cross-cluster comparison painful. This was the final project for Brown’s Interdisciplinary Scientific Visualization course (CSCI 2370), built with course teammates.',
         ],
       },
       {
@@ -353,7 +353,7 @@ docker compose -f docker-compose.mock.yml up --build   # full 5-service stack, n
       {
         heading: 'User Study & Results',
         paragraphs: [
-          'We ran a user study (n=25) comparing the radial + UMAP system against a baseline view on comparison tasks. Task completion was 18.5% faster with our design. Modest, but real — and it changed how I think about validating visualization choices.',
+          'We ran a user study (n=25) comparing the radial + UMAP system against a baseline view on comparison tasks. Task completion was 18.5% faster with our design. Modest, but real. It changed how I think about validating visualization choices.',
         ],
       },
       {
@@ -374,7 +374,7 @@ export const otherProjects = [
     tag: 'Course project',
     date: '2026',
     description:
-      'Generative 3D mesh modeling — final project for CSCI 2470 (Deep Learning) at Brown.',
+      'Generative 3D mesh modeling, my final project for CSCI 2470 (Deep Learning) at Brown.',
     href: 'https://github.com/Shravya29M/MeshGPT',
   },
   {
@@ -390,7 +390,7 @@ export const otherProjects = [
     tag: 'Research',
     date: '2024',
     description:
-      'Hiding encrypted data in DNA codon sequences — the basis of the GenoCryptNet paper at IEEE ICSTSDG 2024.',
+      'Hiding encrypted data in DNA codon sequences, the basis of the GenoCryptNet paper at IEEE ICSTSDG 2024.',
     href: 'https://github.com/Shravya29M/Genocrypt',
   },
   {
@@ -398,7 +398,7 @@ export const otherProjects = [
     tag: 'Computer vision',
     date: '2024',
     description:
-      'Teaching a model to read emotions from faces — the computer-vision experiments that later fed into Elyssa.',
+      'Teaching a model to read emotions from faces: the computer-vision experiments that later fed into Elyssa.',
     href: 'https://github.com/Shravya29M/SentioSphere-Decoding-Emotions-Through-Vision',
   },
   {
@@ -414,7 +414,7 @@ export const otherProjects = [
     tag: 'Prototype',
     date: '2023',
     description:
-      'A prototype storing encrypted health records on IPFS — patient data deserves better than a single point of failure.',
+      'A prototype storing encrypted health records on IPFS, because patient data deserves better than a single point of failure.',
     href: 'https://github.com/Shravya29M/IPFS-For-Healthcare',
   },
   {
@@ -422,7 +422,7 @@ export const otherProjects = [
     tag: 'ML',
     date: '2023',
     description:
-      'Detecting schizophrenia from clinical data with classical ML — the dataset was small, so interpretability mattered more than fancy models.',
+      'Detecting schizophrenia from clinical data with classical ML. The dataset was small, so interpretability mattered more than fancy models.',
     href: 'https://github.com/Shravya29M/Schizophrenia-Detection',
   },
 ];
@@ -468,7 +468,7 @@ export const publications = [
     title: 'Interactive System for Emotional Well-Being and Assisted Care',
     venue: 'Indian Patent No. 202541093582A · Oct 2025',
     href: null,
-    note: 'The patent behind Elyssa — a system that combines facial emotion detection with text sentiment to respond with actual context. (Indian patent applications don’t get a public URL, so the number is what I can give you.)',
+    note: 'The patent behind Elyssa: a system that combines facial emotion detection with text sentiment to respond with actual context. (Indian patent applications don’t get a public URL, so the number is what I can give you.)',
   },
   {
     type: 'Paper',
@@ -476,7 +476,7 @@ export const publications = [
       'Alzheimer’s Disease Classification Using CUDA-Accelerated DenseNet201 and VGG16',
     venue: 'IEEE ICICNIS · 2024',
     href: 'https://ieeexplore.ieee.org/document/10823113',
-    note: 'My first published paper. An ensemble of two CNN backbones classifying Alzheimer’s from MRI scans — most of the gains came from getting the preprocessing right.',
+    note: 'My first published paper. An ensemble of two CNN backbones classifying Alzheimer’s from MRI scans. Most of the gains came from getting the preprocessing right.',
   },
   {
     type: 'Paper',

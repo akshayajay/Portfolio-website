@@ -88,7 +88,7 @@ function Footer() {
     <footer className="mt-20 border-t border-hairline py-10">
       <div className="flex flex-wrap items-baseline justify-between gap-4">
         <p>
-          Thanks for scrolling all the way down. Say hi —{' '}
+          Thanks for scrolling all the way down. Say hi:{' '}
           <a
             href={`mailto:${profile.email}`}
             className="text-accent hover:underline underline-offset-4"
@@ -217,7 +217,7 @@ function WorkPage() {
             <ul className="mt-3 space-y-1.5">
               {job.bullets.map((b) => (
                 <li key={b} className="flex gap-3">
-                  <span className="select-none text-hairline">—</span>
+                  <span className="select-none text-hairline">-</span>
                   <span>{b}</span>
                 </li>
               ))}
@@ -277,8 +277,7 @@ function ResearchPage() {
         The code behind these lives on the{' '}
         <Link to="/projects" className="text-accent hover:underline underline-offset-4">
           projects page
-        </Link>{' '}
-        — the patent came out of{' '}
+        </Link>. The patent came out of{' '}
         <Link
           to="/projects/elyssa"
           className="text-accent hover:underline underline-offset-4"
@@ -434,7 +433,7 @@ function ProjectPost() {
             <ul className="mt-3 space-y-1.5 first:mt-0">
               {section.bullets.map((b) => (
                 <li key={b} className="flex gap-3">
-                  <span className="select-none text-hairline">—</span>
+                  <span className="select-none text-hairline">-</span>
                   <span>{b}</span>
                 </li>
               ))}
