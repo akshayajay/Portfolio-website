@@ -1,780 +1,260 @@
 import { useEffect, useState } from 'react';
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Link,
-  NavLink,
-  useParams,
-  useLocation,
-} from 'react-router-dom';
-import {
-  profile,
-  experience,
-  projects,
-  otherProjects,
-  skills,
-  topics,
-  publications,
-  education,
-  certifications,
-  places,
-  placesIntro,
-  placesCurrently,
-  coffeeStatus,
-  funStats,
-  randomLikes,
-  shelfBooks,
-  shows,
-} from './data/site';
-import { WORLD_PATH, WORLD_VIEWBOX, projectPlace } from './assets/worldPath';
+import { AnimatePresence, motion } from 'framer-motion';
+import { BrowserRouter, Link, NavLink, Route, Routes, useLocation, useParams } from 'react-router-dom';
+import { FiArrowDownRight, FiArrowUpRight, FiGithub, FiLinkedin, FiMail, FiMenu, FiX } from 'react-icons/fi';
+import { featuredProjects, projects } from './data/projects';
+import { publications } from './data/publications';
+import { events, leadership } from './data/leadership';
+import { accolades, experience, media, profile } from './data/stories';
 import './index.css';
 
-function ExternalLink({ href, children, className = '' }) {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={`text-accent hover:underline underline-offset-4 ${className}`}
-    >
-      {children}
-    </a>
-  );
-}
+const MotionDiv = motion.div;
+const MotionP = motion.p;
+const MotionH1 = motion.h1;
+const MotionSpan = motion.span;
 
-function Divider() {
+const descriptors = [
+  'I build intelligent systems.',
+  'I research messy problems.',
+  'I lead ambitious ideas.',
+  'I make a really good dessert.',
+];
+
+const navItems = [
+  ['Home', '/'], ['Work', '/#work'], ['Research', '/research'], ['Accolades', '/accolades'],
+  ['Leadership', '/leadership'], ['Beyond Tech', '/beyond-tech'], ['Contact', '/#contact'],
+];
+
+function Cursor() {
+  const [state, setState] = useState({ x: -100, y: -100, label: '' });
+  useEffect(() => {
+    if (window.matchMedia('(pointer: coarse)').matches) return undefined;
+    const move = (event) => {
+      const target = event.target.closest('[data-cursor]');
+      setState({ x: event.clientX, y: event.clientY, label: target?.dataset.cursor || '' });
+    };
+    window.addEventListener('mousemove', move);
+    return () => window.removeEventListener('mousemove', move);
+  }, []);
   return (
-    <div className="my-16 text-center font-mono text-xs tracking-[0.6em] text-faint select-none">
-      · · ·
+    <div className={`custom-cursor ${state.label ? 'is-active' : ''}`} style={{ transform: `translate3d(${state.x}px, ${state.y}px, 0)` }}>
+      {state.label}
     </div>
-  );
-}
-
-function Section({ title, children }) {
-  return (
-    <section>
-      <Divider />
-      <h2 className="mb-8 text-xl font-semibold tracking-tight">{title}</h2>
-      {children}
-    </section>
-  );
-}
-
-function Header() {
-  const nav = [
-    ['About', '/'],
-    ['Work', '/work'],
-    ['Projects', '/projects'],
-    ['Research', '/research'],
-    ['Skills', '/skills'],
-    ['Scrapbook', '/places'],
-  ];
-  return (
-    <header className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 pt-10">
-      <Link to="/" className="font-semibold tracking-tight">
-        {profile.name}
-      </Link>
-      <nav className="flex flex-wrap gap-x-5 gap-y-1 font-mono text-xs">
-        {nav.map(([label, to]) => (
-          <NavLink
-            key={to}
-            to={to}
-            end={to === '/'}
-            className={({ isActive }) =>
-              isActive ? 'text-ink' : 'text-faint hover:text-ink'
-            }
-          >
-            {label}
-          </NavLink>
-        ))}
-      </nav>
-    </header>
-  );
-}
-
-function Footer() {
-  return (
-    <footer className="mt-20 border-t border-hairline py-10">
-      <div className="flex flex-wrap items-baseline justify-between gap-4">
-        <p>
-          Thanks for scrolling all the way down. Say hi:{' '}
-          <a
-            href={`mailto:${profile.email}`}
-            className="text-accent hover:underline underline-offset-4"
-          >
-            {profile.email}
-          </a>
-        </p>
-        <p className="font-mono text-xs text-faint">© 2026 {profile.name}</p>
-      </div>
-      <p className="mt-4 font-mono text-xs text-faint">
-        Handmade with React + Tailwind, set in Charter, hosted on Vercel,
-        powered by coffee. No trackers, no analytics, no gradients.
-      </p>
-    </footer>
-  );
-}
-
-function PageTitle({ title, intro }) {
-  return (
-    <div className="mt-16">
-      <h1 className="text-3xl font-semibold tracking-tight">{title}</h1>
-      {intro && <p className="mt-4 max-w-xl">{intro}</p>}
-    </div>
-  );
-}
-
-/* ---------- About (home) ---------- */
-
-function PlacesMap() {
-  const [tip, setTip] = useState(null);
-  const [, , VW, VH] = WORLD_VIEWBOX.split(' ').map(Number);
-
-  return (
-    <div className="relative">
-      <svg
-        viewBox={WORLD_VIEWBOX}
-        role="img"
-        aria-label={`World map with pins on ${places.map((p) => p.name).join(', ')}`}
-        className="w-full rounded-md border border-hairline bg-white/60"
-      >
-        <path d={WORLD_PATH} className="fill-hairline" />
-        {places.map((place) => {
-          const { x, y } = projectPlace(place.lat, place.lng);
-          const active = tip?.name === place.name;
-          return (
-            <g
-              key={place.name}
-              className="cursor-pointer"
-              onMouseEnter={() => setTip({ ...place, x, y })}
-              onMouseLeave={() => setTip(null)}
-              onClick={() => setTip(active ? null : { ...place, x, y })}
-            >
-              <circle cx={x} cy={y} r="9" fill="transparent" />
-              <circle
-                cx={x}
-                cy={y}
-                r={active ? 5 : 3.5}
-                className={`fill-accent ${active ? 'opacity-40' : 'opacity-20'}`}
-              />
-              <circle cx={x} cy={y} r={active ? 2.2 : 1.6} className="fill-accent" />
-            </g>
-          );
-        })}
-      </svg>
-      {tip && (
-        <div
-          className="pointer-events-none absolute z-20 w-max max-w-60 rounded-md border border-hairline bg-paper px-3 py-2 shadow-sm"
-          style={{
-            left: `${(tip.x / VW) * 100}%`,
-            top: `${(tip.y / VH) * 100}%`,
-            transform: `translate(${
-              tip.x / VW > 0.75 ? '-90%' : tip.x / VW < 0.2 ? '-10%' : '-50%'
-            }, calc(-100% - 10px))`,
-          }}
-        >
-          <p className="font-mono text-[11px] uppercase tracking-wider text-faint">
-            {tip.name}
-          </p>
-          {tip.note && <p className="mt-0.5 text-sm leading-snug">{tip.note}</p>}
-        </div>
-      )}
-    </div>
-  );
-}
-
-function CoffeeCup({ className = '' }) {
-  return (
-    <svg viewBox="0 0 40 42" aria-hidden="true" className={className}>
-      <g className="text-faint">
-        <path className="steam" d="M14 12c-1.4-2.3 1.4-3.7 0-6" />
-        <path className="steam steam-2" d="M19.5 11c-1.4-2.3 1.4-3.7 0-6" />
-        <path className="steam steam-3" d="M25 12c-1.4-2.3 1.4-3.7 0-6" />
-      </g>
-      <g fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-        <path className="text-ink" d="M10 17h19v9a7 7 0 0 1-7 7h-5a7 7 0 0 1-7-7v-9Z" />
-        <path className="text-ink" d="M29 19h2.5a4 4 0 0 1 0 8H29" />
-        <path className="text-faint" d="M8 38h25" />
-      </g>
-    </svg>
-  );
-}
-
-function CoffeeRing({ className = '' }) {
-  return (
-    <div
-      aria-hidden="true"
-      className={`pointer-events-none absolute rounded-full border-[5px] border-[#8a5a2b]/10 ${className}`}
-    />
-  );
-}
-
-function ScrapCard({ label, entries, children, className = '' }) {
-  return (
-    <div
-      className={`rounded-md border border-hairline bg-white/60 px-5 py-4 font-mono text-xs leading-6 ${className}`}
-    >
-      <p className="mb-2 flex items-center gap-2 uppercase tracking-[0.2em] text-faint">
-        {label}
-        {children}
-      </p>
-      {entries.map(([k, v]) => (
-        <p key={k}>
-          <span className="text-faint">{k}:</span> <span className="text-ink">{v}</span>
-        </p>
-      ))}
-    </div>
-  );
-}
-
-function PlacesPage() {
-  return (
-    <main>
-      <PageTitle title="The scrapbook" intro={placesIntro} />
-
-      {/* Map, taped in like a photo. Breaks out of the text column on wide screens. */}
-      <div className="relative mt-12 md:-mx-14 lg:-mx-36">
-        <div
-          aria-hidden="true"
-          className="absolute -top-2.5 left-6 z-10 h-5 w-24 -rotate-6 bg-[#e6d795]/60"
-        />
-        <div
-          aria-hidden="true"
-          className="absolute -top-2.5 right-6 z-10 h-5 w-24 rotate-3 bg-[#b7c4ae]/60"
-        />
-        <PlacesMap />
-        <p className="mt-3 -rotate-1 text-right font-hand text-sm text-faint">
-          hover the pins — every one has a memory attached ↑
-        </p>
-      </div>
-
-      {/* Currently + coffee */}
-      <div className="relative mt-10 grid gap-5 sm:grid-cols-2">
-        <CoffeeRing className="-right-8 -top-8 h-20 w-20 rotate-12" />
-        <ScrapCard
-          label="Currently"
-          entries={placesCurrently}
-          className="-rotate-[0.5deg] transition-transform hover:rotate-0"
-        />
-        <ScrapCard
-          label="Coffee status"
-          entries={coffeeStatus}
-          className="rotate-[0.5deg] transition-transform hover:rotate-0"
-        >
-          <CoffeeCup className="h-6 w-6" />
-        </ScrapCard>
-      </div>
-
-      {/* Tiny fun stats */}
-      <Section title="Extremely rigorous statistics">
-        <div className="relative grid gap-4 sm:grid-cols-2">
-          <CoffeeRing className="-bottom-6 -left-10 h-24 w-24 -rotate-6" />
-          {funStats.map(([label, value], i) => (
-            <div
-              key={label}
-              className={`rounded-md border border-hairline bg-white/60 px-4 py-3 transition-transform hover:rotate-0 ${
-                i % 2 ? 'rotate-[0.6deg]' : '-rotate-[0.6deg]'
-              }`}
-            >
-              <p className="font-mono text-xs uppercase tracking-wider text-faint">
-                {label}
-              </p>
-              <p className="mt-1 font-semibold">{value}</p>
-            </div>
-          ))}
-        </div>
-      </Section>
-
-      {/* Random likes */}
-      <Section title="Random things I like">
-        <div className="flex max-w-xl flex-wrap gap-2.5">
-          {randomLikes.map((like) => (
-            <span
-              key={like}
-              className="rounded-full border border-hairline bg-white/60 px-3.5 py-1 text-sm transition-transform hover:-rotate-2 hover:border-accent"
-            >
-              {like}
-            </span>
-          ))}
-        </div>
-      </Section>
-
-      {/* Books & shows */}
-      <Section title="The shelf">
-        <p className="max-w-xl">
-          Fantasy, mostly. The rule of thumb: if there’s a map in the front and a
-          family tree in the back, I’m in.
-        </p>
-        <div className="mt-8 flex items-end gap-1.5 border-b-[6px] border-hairline px-3 pb-0">
-          {shelfBooks.map((book, i) => (
-            <div
-              key={book.title}
-              style={{ background: book.color }}
-              title={`${book.title} — ${book.author}`}
-              className={`flex items-center justify-center rounded-t-[3px] transition-transform duration-200 hover:-translate-y-2 ${
-                ['h-40', 'h-36', 'h-44', 'h-36', 'h-40'][i % 5]
-              } w-9 ${i === shelfBooks.length - 1 ? 'ml-2 origin-bottom-left rotate-6' : ''}`}
-            >
-              <span
-                className="font-mono text-[10px] tracking-wide text-white/90"
-                style={{ writingMode: 'vertical-rl' }}
-              >
-                {book.title}
-              </span>
-            </div>
-          ))}
-        </div>
-        <p className="mt-3 font-hand text-sm text-faint">
-          the leaning one is the current read
-        </p>
-
-        <div className="mt-10 grid gap-5 sm:grid-cols-3">
-          {shows.map((show, i) => (
-            <div
-              key={show.title}
-              className={`relative rounded-md border border-hairline bg-white/60 px-4 pb-4 pt-6 transition-transform hover:rotate-0 ${
-                i % 2 ? 'rotate-[0.8deg]' : '-rotate-[0.8deg]'
-              }`}
-            >
-              <div
-                aria-hidden="true"
-                className="absolute -top-2 left-1/2 h-4 w-16 -translate-x-1/2 -rotate-2 bg-[#e6d795]/60"
-              />
-              <p className="font-semibold leading-snug">{show.title}</p>
-              <p className="mt-1 font-mono text-xs text-faint">{show.note}</p>
-            </div>
-          ))}
-        </div>
-      </Section>
-
-      <p className="mt-14">
-        Okay, back to the{' '}
-        <Link to="/projects" className="text-accent hover:underline underline-offset-4">
-          serious stuff
-        </Link>
-        .{' '}
-        <span className="font-hand text-sm text-faint">
-          (the coffee’s getting cold anyway)
-        </span>
-      </p>
-    </main>
-  );
-}
-
-function Intro() {
-  return (
-    <div className="mt-20">
-      <h1 className="text-3xl font-semibold tracking-tight">{profile.tagline}</h1>
-      {profile.intro.map((para) => (
-        <p key={para} className="mt-5 max-w-xl">
-          {para}
-        </p>
-      ))}
-      <p className="mt-6 font-mono text-xs text-faint">
-        <span className="mr-2 inline-block h-1.5 w-1.5 rounded-full bg-accent align-middle" />
-        {profile.status}
-      </p>
-      <p className="mt-3 max-w-xl">
-        If you’d rather have all of this on one tidy page,{' '}
-        <a
-          href={profile.resume}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-accent hover:underline underline-offset-4"
-        >
-          here’s my resume
-        </a>
-        .
-      </p>
-      <div className="mt-5 flex gap-5 font-mono text-xs">
-        <ExternalLink href={profile.github}>GitHub</ExternalLink>
-        <ExternalLink href={profile.linkedin}>LinkedIn</ExternalLink>
-        <a
-          href={`mailto:${profile.email}`}
-          className="text-accent hover:underline underline-offset-4"
-        >
-          Email
-        </a>
-        <a
-          href={profile.resume}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-accent hover:underline underline-offset-4"
-        >
-          Resume
-        </a>
-      </div>
-
-      <div className="mt-10 rounded-md border border-hairline px-5 py-4 font-mono text-xs leading-6">
-        <p className="mb-2 uppercase tracking-[0.2em] text-faint">Currently</p>
-        {profile.currently.map(([label, value]) => (
-          <p key={label}>
-            <span className="text-faint">{label}:</span>{' '}
-            <span className="text-ink">{value}</span>
-          </p>
-        ))}
-      </div>
-
-      <p className="mt-8">
-        If you want to see what I’ve actually built,{' '}
-        <Link to="/projects" className="text-accent hover:underline underline-offset-4">
-          the projects page
-        </Link>{' '}
-        is the good part. My internships are over on{' '}
-        <Link to="/work" className="text-accent hover:underline underline-offset-4">
-          work
-        </Link>
-        , and the papers live under{' '}
-        <Link to="/research" className="text-accent hover:underline underline-offset-4">
-          research
-        </Link>
-        . And if you’re wondering about the trip-planning comment,{' '}
-        <Link to="/places" className="text-accent hover:underline underline-offset-4">
-          there’s a map
-        </Link>
-        .
-      </p>
-    </div>
-  );
-}
-
-function AboutPage() {
-  return (
-    <main>
-      <Intro />
-    </main>
-  );
-}
-
-/* ---------- Work ---------- */
-
-function WorkPage() {
-  return (
-    <main>
-      <PageTitle title="Where I’ve worked" intro={profile.workIntro} />
-      <div className="mt-12 space-y-12">
-        {experience.map((job) => (
-          <div key={job.company + job.role}>
-            <div className="flex flex-wrap items-baseline justify-between gap-x-4">
-              <h3 className="font-semibold">
-                {job.role} <span className="font-normal text-faint">· {job.company}</span>
-              </h3>
-              <span className="font-mono text-xs text-faint">{job.date}</span>
-            </div>
-            <p className="mt-2 italic text-faint">{job.summary}</p>
-            <ul className="mt-3 space-y-1.5">
-              {job.bullets.map((b) => (
-                <li key={b} className="flex gap-3">
-                  <span className="select-none text-hairline">-</span>
-                  <span>{b}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
-      <Section title="Education">
-        <div className="space-y-5">
-          {education.map((e) => (
-            <div
-              key={e.school}
-              className="flex flex-wrap items-baseline justify-between gap-x-4"
-            >
-              <p>
-                <span className="font-semibold">{e.school}</span>
-                <span className="text-faint"> · {e.degree}</span>
-              </p>
-              <span className="font-mono text-xs text-faint">{e.detail}</span>
-            </div>
-          ))}
-          <p className="font-mono text-xs text-faint">
-            Certifications: {certifications.join(' · ')}
-          </p>
-        </div>
-      </Section>
-    </main>
-  );
-}
-
-/* ---------- Research ---------- */
-
-function ResearchPage() {
-  return (
-    <main>
-      <PageTitle title="Papers & a patent" intro={profile.researchIntro} />
-      <div className="mt-12 space-y-8">
-        {publications.map((pub) => (
-          <div key={pub.title} className="border-t border-hairline pt-5">
-            <p className="font-semibold">
-              {pub.href ? (
-                <ExternalLink href={pub.href} className="text-ink hover:text-accent">
-                  {pub.title} ↗
-                </ExternalLink>
-              ) : (
-                pub.title
-              )}
-            </p>
-            <p className="mt-1 font-mono text-xs text-faint">
-              {pub.type} · {pub.venue}
-            </p>
-            {pub.note && <p className="mt-2">{pub.note}</p>}
-          </div>
-        ))}
-      </div>
-      <p className="mt-12">
-        The code behind these lives on the{' '}
-        <Link to="/projects" className="text-accent hover:underline underline-offset-4">
-          projects page
-        </Link>. The patent came out of{' '}
-        <Link
-          to="/projects/elyssa"
-          className="text-accent hover:underline underline-offset-4"
-        >
-          Elyssa
-        </Link>
-        , and the papers came out of Alzheimer’s Detection and GenoCrypt.
-      </p>
-    </main>
-  );
-}
-
-/* ---------- Projects ---------- */
-
-function ProjectIndexEntry({ title, tag, date, description, readMoreTo, githubHref }) {
-  return (
-    <div className="border-t border-hairline pt-5 pb-1">
-      <div className="flex flex-wrap items-baseline gap-x-3">
-        {readMoreTo ? (
-          <Link to={readMoreTo} className="font-semibold hover:text-accent">
-            {title}
-          </Link>
-        ) : (
-          <ExternalLink
-            href={githubHref}
-            className="font-semibold text-ink hover:text-accent"
-          >
-            {title}
-          </ExternalLink>
-        )}
-        <span className="font-mono text-xs uppercase tracking-wider text-faint">
-          ({tag})
-        </span>
-      </div>
-      <p className="mt-1.5">{description}</p>
-      <div className="mt-2 flex flex-wrap items-baseline gap-x-5 font-mono text-xs">
-        {readMoreTo ? (
-          <Link to={readMoreTo} className="text-accent hover:underline underline-offset-4">
-            Read more →
-          </Link>
-        ) : (
-          <ExternalLink href={githubHref}>GitHub →</ExternalLink>
-        )}
-        <span className="text-faint">{date}</span>
-      </div>
-    </div>
-  );
-}
-
-function ProjectsPage() {
-  return (
-    <main>
-      <PageTitle title="Things I’ve built" intro={profile.projectsIntro} />
-      <div className="mt-10 space-y-6">
-        {projects.map((p) => (
-          <ProjectIndexEntry
-            key={p.slug}
-            title={p.title}
-            tag={p.tag}
-            date={p.date}
-            description={p.oneLiner}
-            readMoreTo={`/projects/${p.slug}`}
-          />
-        ))}
-        {otherProjects.map((p) => (
-          <ProjectIndexEntry
-            key={p.title}
-            title={p.title}
-            tag={p.tag}
-            date={p.date}
-            description={p.description}
-            githubHref={p.href}
-          />
-        ))}
-      </div>
-    </main>
-  );
-}
-
-function ProjectPost() {
-  const { slug } = useParams();
-  const project = projects.find((p) => p.slug === slug);
-  if (!project) return <NotFound />;
-
-  return (
-    <main className="mt-16">
-      <Link to="/projects" className="font-mono text-xs text-faint hover:text-ink">
-        ← Back to projects
-      </Link>
-
-      <h1 className="mt-6 text-3xl font-semibold tracking-tight">{project.title}</h1>
-      <p className="mt-3 font-mono text-xs text-faint">
-        {project.tag} · {project.date} · {project.stack}
-      </p>
-      <div className="mt-4 flex flex-wrap gap-5 font-mono text-xs">
-        {project.links.map((l) => (
-          <ExternalLink key={l.href} href={l.href}>
-            {l.label} ↗
-          </ExternalLink>
-        ))}
-      </div>
-
-      {project.gif && (
-        <img
-          src={project.gif}
-          alt={project.gifAlt}
-          loading="lazy"
-          className="mt-8 w-full rounded-md border border-hairline"
-        />
-      )}
-
-      {project.image && (
-        <figure className="mt-8">
-          <img
-            src={project.image.src}
-            alt={project.image.alt}
-            loading="lazy"
-            className="w-full rounded-md border border-hairline"
-          />
-          <figcaption className="mt-2 font-mono text-xs text-faint">
-            {project.image.caption}
-          </figcaption>
-        </figure>
-      )}
-
-      {project.tryIt && (
-        <div className="mt-8">
-          <p className="mb-2 font-mono text-xs uppercase tracking-[0.2em] text-faint">
-            Try it
-          </p>
-          <pre className="overflow-x-auto rounded-md border border-hairline bg-white/60 px-4 py-3 font-mono text-xs leading-6">
-            {project.tryIt}
-          </pre>
-        </div>
-      )}
-
-      {project.sections.map((section) => (
-        <section key={section.heading} className="mt-12">
-          <h2 className="mb-4 text-lg font-semibold tracking-tight">
-            {section.heading}
-          </h2>
-          {section.paragraphs?.map((para) => (
-            <p key={para} className="mt-3 first:mt-0">
-              {para}
-            </p>
-          ))}
-          {section.pre && (
-            <pre className="overflow-x-auto rounded-md border border-hairline bg-white/60 px-4 py-3 font-mono text-xs leading-5">
-              {section.pre}
-            </pre>
-          )}
-          {section.bullets && (
-            <ul className="mt-3 space-y-1.5 first:mt-0">
-              {section.bullets.map((b) => (
-                <li key={b} className="flex gap-3">
-                  <span className="select-none text-hairline">-</span>
-                  <span>{b}</span>
-                </li>
-              ))}
-            </ul>
-          )}
-        </section>
-      ))}
-    </main>
-  );
-}
-
-/* ---------- Skills ---------- */
-
-function SkillGroupList({ groups }) {
-  return (
-    <div className="space-y-6">
-      {groups.map((s) => (
-        <div key={s.group}>
-          <h3 className="font-semibold">{s.group}</h3>
-          <p className="mt-1">{s.items}</p>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function SkillsPage() {
-  return (
-    <main>
-      <PageTitle title="Tools I reach for" intro={profile.skillsIntro} />
-      <div className="mt-10">
-        <SkillGroupList groups={skills} />
-      </div>
-      <Section title="Topics covered">
-        <SkillGroupList groups={topics} />
-      </Section>
-    </main>
-  );
-}
-
-/* ---------- 404 ---------- */
-
-function NotFound() {
-  return (
-    <main className="mt-24 mb-12">
-      <p className="font-mono text-xs uppercase tracking-[0.2em] text-faint">404</p>
-      <h1 className="mt-4 text-3xl font-semibold tracking-tight">
-        This page doesn’t exist.
-      </h1>
-      <p className="mt-5 max-w-xl">
-        You’ve wandered beyond the Wall. There’s nothing up here but white
-        walkers and broken links.
-      </p>
-      <p className="mt-6 font-mono text-xs">
-        <Link to="/" className="text-accent hover:underline underline-offset-4">
-          ← Head back south
-        </Link>
-      </p>
-    </main>
   );
 }
 
 function ScrollManager() {
   const { pathname, hash } = useLocation();
   useEffect(() => {
-    if (hash) {
-      document.querySelector(hash)?.scrollIntoView();
-    } else {
-      window.scrollTo(0, 0);
-    }
+    const timer = window.setTimeout(() => {
+      if (hash) document.querySelector(hash)?.scrollIntoView({ behavior: 'smooth' });
+      else window.scrollTo({ top: 0, behavior: 'instant' });
+    }, 20);
+    return () => window.clearTimeout(timer);
   }, [pathname, hash]);
   return null;
 }
 
-export default function App() {
+function Header() {
+  const [open, setOpen] = useState(false);
   return (
-    <BrowserRouter>
-      <ScrollManager />
-      <div className="mx-auto max-w-2xl px-6">
-        <Header />
-        <Routes>
-          <Route path="/" element={<AboutPage />} />
-          <Route path="/work" element={<WorkPage />} />
-          <Route path="/research" element={<ResearchPage />} />
-          <Route path="/projects" element={<ProjectsPage />} />
-          <Route path="/projects/:slug" element={<ProjectPost />} />
-          <Route path="/skills" element={<SkillsPage />} />
-          <Route path="/places" element={<PlacesPage />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-        <Footer />
+    <header className="site-header">
+      <div className="nav-shell">
+        <Link to="/" className="wordmark">AKSHAYA<span>.</span></Link>
+        <button className="menu-button" onClick={() => setOpen(!open)} aria-label="Toggle navigation">
+          {open ? <FiX /> : <FiMenu />}
+        </button>
+        <nav className={open ? 'main-nav is-open' : 'main-nav'} aria-label="Main navigation">
+          {navItems.map(([label, to]) => (
+            <NavLink key={label} to={to} onClick={() => setOpen(false)} className={({ isActive }) => isActive && !to.includes('#') ? 'active' : ''}>{label}</NavLink>
+          ))}
+        </nav>
+        <div className="nav-socials">
+          <a href={profile.resume} target="_blank" rel="noreferrer">Résumé</a>
+          <a href={profile.github} target="_blank" rel="noreferrer" aria-label="GitHub"><FiGithub /></a>
+          <a href={profile.linkedin} target="_blank" rel="noreferrer" aria-label="LinkedIn"><FiLinkedin /></a>
+        </div>
       </div>
-    </BrowserRouter>
+    </header>
   );
 }
+
+function Reveal({ children, className = '', delay = 0 }) {
+  return (
+    <MotionDiv className={className} initial={{ opacity: 0, y: 28 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-70px' }} transition={{ duration: .7, delay, ease: [.22, 1, .36, 1] }}>
+      {children}
+    </MotionDiv>
+  );
+}
+
+function SectionHeading({ eyebrow, title, intro, light = false }) {
+  return (
+    <Reveal className={`section-heading ${light ? 'light' : ''}`}>
+      <p className="eyebrow">{eyebrow}</p>
+      <h2>{title}</h2>
+      {intro && <p className="section-intro">{intro}</p>}
+    </Reveal>
+  );
+}
+
+function ArrowLink({ to, href, children, cursor = 'VIEW', secondary = false }) {
+  const cls = secondary ? 'arrow-link secondary' : 'arrow-link';
+  const content = <>{children}<FiArrowUpRight /></>;
+  return to ? <Link className={cls} to={to} data-cursor={cursor}>{content}</Link> : <a className={cls} href={href} target="_blank" rel="noreferrer" data-cursor={cursor}>{content}</a>;
+}
+
+function Hero() {
+  const [index, setIndex] = useState(0);
+  useEffect(() => {
+    const timer = window.setInterval(() => setIndex((i) => (i + 1) % descriptors.length), 2800);
+    return () => window.clearInterval(timer);
+  }, []);
+  return (
+    <section className="hero" id="home">
+      <div className="hero-orb orb-one" /><div className="hero-orb orb-two" />
+      {['Python', 'NLP', 'ideas', 'SQL', 'research', 'AI'].map((word, i) => <span key={word} className={`float-word word-${i + 1}`}>{word}</span>)}
+      <div className="hero-copy">
+        <MotionP className="hero-kicker" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: .2 }}>Data Scientist · ML Engineer · Researcher</MotionP>
+        <MotionH1 initial={{ opacity: 0, y: 35 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .9, ease: [.22, 1, .36, 1] }}>Hi, I’m <em>Akshaya.</em></MotionH1>
+        <div className="descriptor-wrap" aria-live="polite">
+          <AnimatePresence mode="wait">
+            <MotionP key={descriptors[index]} initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -14 }} transition={{ duration: .45 }}>{descriptors[index]}</MotionP>
+          </AnimatePresence>
+        </div>
+        <MotionP className="hero-support" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: .55 }}>
+          Currently pursuing an ScM in Data Science at Brown University, working at the intersection of machine learning, data engineering, NLP, and applied research.
+        </MotionP>
+        <MotionDiv className="hero-actions" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .75 }}>
+          <Link className="button button-dark" to="/#work">Explore my work <FiArrowDownRight /></Link>
+          <a className="text-link" href={profile.resume} target="_blank" rel="noreferrer">Download résumé</a>
+        </MotionDiv>
+      </div>
+      <div className="hero-side-note"><span>Brown University</span><span>Providence, RI</span></div>
+      <a href="#about" className="scroll-cue" aria-label="Scroll to about"><span>Scroll</span><i /></a>
+    </section>
+  );
+}
+
+function AboutStrip() {
+  const statements = ['I work with data.', 'I build machine-learning systems.', 'I love turning messy problems into structured ones.', 'I’ve published research.', 'I’ve worked on a patent.', 'I organize things. A lot of things.', 'I love to cook and bake.', 'Apparently, I also collect responsibilities.'];
+  return (
+    <section className="about-strip section-pad" id="about">
+      <SectionHeading eyebrow="01 — Introducing Akshaya" title="A few things about me." intro="One person, several tabs open." />
+      <div className="statement-grid">
+        {statements.map((text, i) => <Reveal key={text} delay={(i % 4) * .06} className={`statement-card statement-${i + 1}`}><span>0{i + 1}</span><p>{text}</p></Reveal>)}
+      </div>
+      <Reveal className="identity-line"><span>I like building</span><div className="identity-words"><b>models.</b><b>systems.</b><b>communities.</b><b>ideas.</b><b>desserts.</b></div></Reveal>
+    </section>
+  );
+}
+
+function ProjectVisual({ type }) {
+  if (type === 'clinical') return <div className="project-visual clinical-visual"><div className="clinical-head"><span>MODEL COMPARISON</span><span>SUPPORT2 · TEST SET</span></div><div className="model-board"><div><span>Gradient Boosting</span><i style={{width:'91.6%'}}/><b>0.916</b></div><div><span>XGBoost</span><i style={{width:'88%'}}/><b>evaluated</b></div><div><span>Random Forest</span><i style={{width:'82%'}}/><b>evaluated</b></div><div><span>Logistic Regression</span><i style={{width:'76%'}}/><b>baseline</b></div></div><div className="clinical-summary"><span><b>5</b> models compared</span><span><b>SHAP</b> explainability</span><span><b>40</b> automated tests</span></div></div>;
+  if (type === 'cinema') return <div className="project-visual cinema-visual"><div className="marquee">NOW MODELING</div><div className="film-title">WIKIPEDIA<br/><em>at the movies</em></div><div className="signal-bars">{[72, 43, 83, 55, 94, 67].map((h, i) => <i key={i} style={{ height: `${h}%` }} />)}</div><div className="film-meta"><span>VIEWS</span><span>EDITORS</span><span>REVISIONS</span></div></div>;
+  if (type === 'document') return <div className="project-visual document-visual"><p>DOCUMENT INTELLIGENCE PIPELINE</p><div className="flow-row">{['Document', 'OCR', 'Retrieval', 'Local LLM', 'Answer'].map((x, i) => <span key={x}><b>{x}</b>{i < 4 && <i>→</i>}</span>)}</div><div className="doc-sheet"><i/><i/><i/><i/></div></div>;
+  return <div className="project-visual finance-visual"><div className="finance-head"><span>NIFTY50 / MOMENTUM</span><b>+18.4%</b></div><div className="chart-grid"><div className="chart-line line-a"><i/><i/><i/><i/><i/><i/></div><div className="chart-line line-b"><i/><i/><i/><i/><i/><i/></div></div><div className="finance-metrics"><span>CAGR<strong>12.8%</strong></span><span>SHARPE<strong>1.24</strong></span><span>VOLATILITY<strong>14.2%</strong></span></div></div>;
+}
+
+function ProjectCard({ project, index }) {
+  return (
+    <Reveal className={`project-feature tone-${project.tone}`}>
+      <div className="project-copy">
+        <div className="project-meta"><span>{project.number}</span><span>{project.category}</span><span>{project.year}</span></div>
+        <h3>{project.title}</h3><p>{project.summary}</p>
+        <div className="project-outcome"><strong>{project.metric}</strong><span>{project.metricLabel}</span><small>{project.secondaryMetric}</small></div>
+        <div className="tags">{project.techStack.slice(0, 5).map(tag => <span key={tag}>{tag}</span>)}</div>
+        <div className="card-actions">{project.liveUrl && <ArrowLink href={project.liveUrl} cursor="TRY">Try live demo</ArrowLink>}<ArrowLink to={`/projects/${project.slug}`}>View case study</ArrowLink><ArrowLink href={project.githubUrl} secondary cursor="CODE">View code</ArrowLink></div>
+      </div>
+      <MotionDiv className="project-art" whileHover={{ rotate: index % 2 ? 1 : -1, scale: 1.01 }} transition={{ type: 'spring', stiffness: 180, damping: 18 }}><ProjectVisual type={project.visual} /></MotionDiv>
+    </Reveal>
+  );
+}
+
+function WorkSection({ all = false }) {
+  const list = all ? projects : featuredProjects;
+  return <section className="work-section section-pad" id="work"><SectionHeading eyebrow="02 — What I build" title={all ? 'Projects, experiments & systems.' : 'Selected work, properly unpacked.'} intro="Not repository tiles. The problem, the thinking, the proof, and what I would do next."/><div className="project-stack">{list.map((project, i) => <ProjectCard key={project.slug} project={project} index={i}/>)}</div>{!all && <div className="section-end-link"><ArrowLink to="/projects">View every project</ArrowLink></div>}</section>;
+}
+
+function ResearchSection({ all = false }) {
+  const list = all ? publications : publications.slice(0, 3);
+  return (
+    <section className="research-section section-pad" id="research">
+      <SectionHeading light eyebrow="03 — What I research" title="Research, publications & ideas I’ve explored." intro="From multimodal healthcare AI to reinforcement learning and language-derived behavioral signals."/>
+      <div className="publication-list">{list.map(pub => <Reveal key={pub.slug} className="publication-card"><div className="pub-number">{pub.number}</div><div className="pub-main"><div className="pub-meta"><span>{pub.type}</span><span>{pub.year}</span></div><h3>{pub.title}</h3><p>{pub.summary}</p><div className="tags dark">{pub.technologies.map(x => <span key={x}>{x}</span>)}</div><ArrowLink to={`/research/${pub.slug}`}>Read the research story</ArrowLink></div><div className="pub-highlight"><strong>{pub.highlight}</strong><span>{pub.label}</span></div></Reveal>)}</div>
+      {!all && <div className="section-end-link light-link"><ArrowLink to="/research">Open the research archive</ArrowLink></div>}
+    </section>
+  );
+}
+
+function AccoladesSection({ all = false }) {
+  const list = all ? accolades : accolades.slice(0, 4);
+  return <section className="accolades-section section-pad" id="accolades"><SectionHeading eyebrow="04 — Things I’m proud of" title="Things that made the hard work worth it." intro="Academic milestones, social-impact recognition, and a few moments I’m still taking in."/><div className="accolade-gallery">{list.map((award, i) => <Reveal key={award.title} className={`award-card award-${i + 1}`}><div className="award-tape"/><p className="award-year">{award.year}</p><div className="award-seal">✦</div><h3>{award.title}</h3><p className="award-org">{award.organization}</p><p>{award.description}</p><span className="hand-note">a good day to remember</span></Reveal>)}</div>{!all && <div className="section-end-link"><ArrowLink to="/accolades">See every accolade</ArrowLink></div>}</section>;
+}
+
+function MediaSection() {
+  return <section className="media-section section-pad"><SectionHeading eyebrow="Featured & documented" title="On the internet, apparently."/><div className="media-strip">{media.map((item, i) => <Reveal key={item.url} delay={i*.08} className="media-card"><div className="media-index">0{i+1}</div><span>{item.type} · {item.date}</span><h3>{item.title}</h3><p>{item.publisher}</p><ArrowLink href={item.url} cursor="READ">View feature</ArrowLink></Reveal>)}</div></section>;
+}
+
+function LeadershipSection({ all = false }) {
+  const list = all ? leadership : leadership.slice(0, 3);
+  return <section className="leadership-section section-pad" id="leadership"><SectionHeading eyebrow="05 — How I lead" title="I don’t just join things. I tend to build them." intro="Leadership was not separate from my undergraduate experience. It was where I learned to turn an idea into a team, and a team into momentum."/><div className="impact-stats"><div><strong>10</strong><span>years building TeenClean</span></div><div><strong>5</strong><span>leadership roles</span></div><div><strong>17</strong><span>interns recruited</span></div><div><strong>3</strong><span>MUN editions</span></div></div><div className="leadership-list">{list.map((item, i) => <Reveal key={item.organization} className="leadership-card"><span className="lead-index">0{i+1}</span><div><p className="eyebrow">{item.dates}</p><h3>{item.role}<em> · {item.organization}</em></h3><p>{item.description}</p><div className="impact-note"><b>What changed</b><span>{item.impact}</span></div></div></Reveal>)}</div>{!all && <div className="section-end-link"><ArrowLink to="/leadership">Leadership & events archive</ArrowLink></div>}</section>;
+}
+
+function InitiativeSection() {
+  return <section className="initiative-section section-pad"><div className="initiative-mark">TC</div><div className="initiative-copy"><p className="eyebrow">06 — Something I started</p><h2>TeenClean</h2><p className="initiative-lead">A youth-led initiative I founded at 13 to make sanitation access and menstrual-hygiene education more equitable.</p><div className="initiative-columns"><div><span>THE PROBLEM</span><p>Adolescent girls in underserved rural communities face gaps in safe sanitation infrastructure and practical hygiene information.</p></div><div><span>WHAT WE DID</span><p>Fundraising, beneficiary coordination, eco-san sanitation support, menstrual-hygiene programs, and direct community outreach.</p></div><div><span>WHY IT STAYED</span><p>The work grew into a decade-long commitment and recognition including the Phenomenal She and Young Social Worker awards.</p></div></div><ArrowLink href="https://teencleaninfo.wixsite.com/teencleanorg">Visit TeenClean</ArrowLink></div></section>;
+}
+
+function EventsSection() {
+  return <section className="events-section section-pad"><SectionHeading eyebrow="Selected events" title="Ideas are more fun when people show up."/><div className="event-rail">{events.map((event, i) => <Reveal key={event.title} className="event-card"><div className="event-top"><span>0{i+1}</span><span>{event.category}</span></div><h3>{event.title}</h3><p>{event.description}</p><div className="event-foot"><span>{event.role}</span><span>{event.date}</span></div></Reveal>)}</div></section>;
+}
+
+function ExperienceSection() {
+  return <section className="experience-section section-pad"><SectionHeading eyebrow="Experience" title="Work that taught me how systems behave in the real world."/><div className="timeline">{experience.map(job => <Reveal key={job.role+job.organization} className="timeline-item"><div className="timeline-date">{job.dates}</div><div><h3>{job.role}</h3><h4>{job.organization}</h4><p>{job.description}</p><div className="tags">{job.skills.map(x=><span key={x}>{x}</span>)}</div></div></Reveal>)}</div></section>;
+}
+
+function CurrentResearch() {
+  const nodes = ['Teacher narratives', 'Topic modeling', 'Transformers', 'Administrative data', 'Teacher attrition'];
+  return <section className="curious-section section-pad"><div className="curious-copy"><p className="eyebrow">Currently curious about...</p><h2>What teachers say—and what it can tell us about who stays.</h2><p>At Brown’s Annenberg Institute, I’m linking themes from tens of thousands of induction narratives with Connecticut administrative records to study early-career attrition.</p></div><div className="network" aria-label="Research concept network"><div className="network-core">research<br/>question</div>{nodes.map((n,i)=><MotionSpan key={n} className={`node node-${i+1}`} animate={{ y: [0,-7,0] }} transition={{ repeat: Infinity, duration: 3+i*.35, ease:'easeInOut' }}>{n}</MotionSpan>)}<i className="net-line n1"/><i className="net-line n2"/><i className="net-line n3"/><i className="net-line n4"/><i className="net-line n5"/></div></section>;
+}
+
+function BeyondSection({ full = false }) {
+  return <section className="beyond-section section-pad" id="beyond"><div className="steam steam-one">~</div><div className="steam steam-two">~</div><div className="beyond-copy"><p className="eyebrow">07 — A little more human</p><h2>There is life beyond Python.<br/><em>Usually, there’s food.</em></h2><p>Cooking and baking are my other kind of experimentation: part precision, part instinct, and always improved by iteration.</p><div className="recipe-flow"><span><small>INPUT</small>Ingredients</span><i>→</i><span><small>PROCESS</small>A little improvisation</span><i>→</i><span><small>OUTPUT</small>Hopefully dessert</span></div>{profile.instagram ? <ArrowLink href={profile.instagram} cursor="YUM">See what I’m cooking</ArrowLink> : <p className="instagram-note">Cooking journal coming soon. For now, imagine warm cookies somewhere just off-screen.</p>}{full && <div className="beyond-notes"><p>My kitchen and my notebooks have more in common than they should: both involve hypotheses, controlled chaos, and a stubborn refusal to stop at version one.</p><p><em>Same curiosity. Different kind of pipeline.</em></p></div>}</div><div className="dessert-board"><div className="plate"><span>made<br/>with<br/>curiosity</span></div><div className="recipe-card"><b>AKSHAYA’S TEST KITCHEN</b><span>01 — measure</span><span>02 — experiment</span><span>03 — taste</span><span>04 — iterate</span><em>repeat as needed ↗</em></div></div></section>;
+}
+
+function ContactSection() {
+  return <section className="contact-section section-pad" id="contact"><p className="eyebrow">08 — Let’s connect</p><h2>Have an interesting problem?<br/><em>I’d love to hear about it.</em></h2><a className="contact-email" href={`mailto:${profile.email}`} data-cursor="WRITE">{profile.email}<FiArrowUpRight /></a><div className="contact-links"><a href={profile.github} target="_blank" rel="noreferrer"><FiGithub/>GitHub</a><a href={profile.linkedin} target="_blank" rel="noreferrer"><FiLinkedin/>LinkedIn</a><a href={profile.resume} target="_blank" rel="noreferrer">Résumé</a></div></section>;
+}
+
+function HomePage() {
+  return <main><Hero/><AboutStrip/><WorkSection/><ResearchSection/><AccoladesSection/><MediaSection/><LeadershipSection/><InitiativeSection/><EventsSection/><ExperienceSection/><CurrentResearch/><BeyondSection/><ContactSection/></main>;
+}
+
+function PageHero({ eyebrow, title, intro, dark = false }) { return <section className={`page-hero ${dark?'dark':''}`}><p className="eyebrow">{eyebrow}</p><h1>{title}</h1><p>{intro}</p></section>; }
+function ProjectsPage() { return <main><PageHero eyebrow="Project archive" title="Things I’ve built, tested & learned from." intro="Machine learning, statistical modeling, document intelligence, financial analytics, and one very live NLP application."/><WorkSection all/><ContactSection/></main>; }
+function ResearchPage() { return <main><PageHero dark eyebrow="Research archive" title="Questions worth sitting with." intro="Published work, a patent, and research experiments across healthcare, finance, and NLP."/><ResearchSection all/><ContactSection/></main>; }
+function AccoladesPage() { return <main><PageHero eyebrow="Accolades" title="A few moments I’m proud of." intro="Not a trophy shelf—a record of the work, communities, and people behind each recognition."/><AccoladesSection all/><MediaSection/><ContactSection/></main>; }
+function LeadershipPage() { return <main><PageHero eyebrow="Leadership" title="Build the room. Invite people in." intro="Organizations founded, events directed, partnerships shaped, and communities kept moving."/><LeadershipSection all/><InitiativeSection/><EventsSection/><ContactSection/></main>; }
+function BeyondPage() { return <main><PageHero eyebrow="Beyond tech" title="My other kind of experimentation." intro="Food, creativity, and the parts of a life that do not fit neatly inside a résumé bullet."/><BeyondSection full/><ContactSection/></main>; }
+
+function DetailMetric({ value, label }) { return <div className="detail-metric"><strong>{value}</strong><span>{label}</span></div>; }
+function ProjectDetail() {
+  const { slug } = useParams(); const project = projects.find(p => p.slug === slug);
+  if (!project) return <NotFound/>;
+  return <main className="detail-page"><section className={`detail-hero tone-${project.tone}`}><Link to="/projects" className="back-link">← All projects</Link><div className="detail-title"><p>{project.number} · {project.category} · {project.year}</p><h1>{project.title}</h1><p>{project.detailedDescription}</p><div className="card-actions">{project.liveUrl&&<ArrowLink href={project.liveUrl} cursor="TRY">Try live demo</ArrowLink>}<ArrowLink href={project.githubUrl} secondary cursor="CODE">View repository</ArrowLink></div></div><ProjectVisual type={project.visual}/></section><section className="case-body"><div className="case-sidebar"><DetailMetric value={project.metric} label={project.metricLabel}/><DetailMetric value={project.secondaryMetric} label="project scale"/><div className="tags">{project.techStack.map(x=><span key={x}>{x}</span>)}</div></div><div className="case-content"><CaseBlock title="The problem" text={project.problem}/><CaseBlock title="Why I built it" text={project.why}/><CaseBlock title="The dataset" text={project.dataset}/><CaseBlock title="Methodology" text={project.methodology}/><div className="case-block"><p className="eyebrow">Results</p><h2>What the work showed.</h2><ul>{project.results.map(x=><li key={x}>{x}</li>)}</ul></div><CaseBlock title="What I learned" text={project.lessons}/><CaseBlock title="What I’d improve" text={project.improve}/></div></section><ContactSection/></main>;
+}
+function CaseBlock({ title, text }) { return <section className="case-block"><p className="eyebrow">{title}</p><h2>{text}</h2></section>; }
+
+function ResearchDetail() {
+  const { slug } = useParams(); const pub = publications.find(p=>p.slug===slug);
+  if(!pub) return <NotFound/>;
+  return <main className="detail-page research-detail"><section className="detail-hero dark"><Link to="/research" className="back-link">← Research archive</Link><div className="detail-title"><p>{pub.number} · {pub.type} · {pub.year}</p><h1>{pub.title}</h1><p>{pub.summary}</p></div><DetailMetric value={pub.highlight} label={pub.label}/></section><section className="research-body"><aside className="research-citation"><p className="eyebrow">Authors</p><p>{pub.authors}</p><p className="eyebrow">Citation</p><p>{pub.citation}</p><div className="tags">{pub.technologies.map(x=><span key={x}>{x}</span>)}</div></aside><div><CaseBlock title="My contribution" text={pub.contribution}/><CaseBlock title="Methodology" text={pub.methodology}/><CaseBlock title="Key findings" text={pub.findings}/>{pub.image&&<figure className="patent-proof"><img src={pub.image} alt={pub.imageAlt}/><figcaption>Published patent application · Indian Patent Office · July 4, 2025</figcaption></figure>}<div className="card-actions">{pub.publicationUrl&&<ArrowLink href={pub.publicationUrl}>Read publication</ArrowLink>}{pub.projectUrl&&<ArrowLink href={pub.projectUrl} secondary cursor="CODE">Related implementation</ArrowLink>}</div></div></section><ContactSection/></main>;
+}
+
+function NotFound() { return <main className="not-found"><p className="eyebrow">404</p><h1>This page wandered off.</h1><Link className="button button-dark" to="/">Return home</Link></main>; }
+function Footer() { return <footer><span>© 2026 Akshaya Jayakanth</span><span>Data, ideas & a little bit of dessert.</span><a href={`mailto:${profile.email}`}><FiMail/>Say hello</a></footer>; }
+
+function AppShell() {
+  return <><ScrollManager/><Cursor/><Header/><Routes><Route path="/" element={<HomePage/>}/><Route path="/projects" element={<ProjectsPage/>}/><Route path="/projects/:slug" element={<ProjectDetail/>}/><Route path="/research" element={<ResearchPage/>}/><Route path="/research/:slug" element={<ResearchDetail/>}/><Route path="/accolades" element={<AccoladesPage/>}/><Route path="/leadership" element={<LeadershipPage/>}/><Route path="/beyond-tech" element={<BeyondPage/>}/><Route path="*" element={<NotFound/>}/></Routes><Footer/></>;
+}
+
+export default function App() { return <BrowserRouter><AppShell/></BrowserRouter>; }
