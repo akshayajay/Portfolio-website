@@ -23,17 +23,19 @@ export const experience = [
 ];
 
 export const education = [
-  { organization: 'Brown University', degree: 'ScM in Data Science', dates: 'Aug 2025 – May 2027', note: 'Expected graduation: May 2027.' },
-  { organization: 'Harvard University', degree: 'Cross-registered graduate coursework', dates: 'Sep – Dec 2026', note: 'Faculty of Arts and Sciences · Applied Computation: Advanced Practical Data Science, MLOps.' },
-  { organization: 'SRM University', degree: 'BTech in Computer Science with Big Data Analysis', dates: '2021 – 2025', note: '' },
+  { organization: 'Brown University', degree: 'ScM in Data Science', dates: 'Aug 2025 – May 2027', note: 'Expected graduation: May 2027. Coursework: Data Engineering, Statistical Learning, Hands-on Data Science, and Fairness in Automated Decision Making.' },
+  { organization: 'Harvard University', degree: 'Cross-registered graduate coursework', dates: 'Sep – Dec 2026', note: 'Faculty of Arts and Sciences · AC215 MLOps and LLMOps: Production AI Systems; Advanced Practical Data Science.' },
+  { organization: 'SRM Institute of Science and Technology', degree: 'BTech in CSE, Big Data Analytics', dates: 'Sep 2021 – Jun 2025', note: '' },
   { organization: 'M.Ct.M Chiddambaram Chetteyar International School', degree: 'High School Diploma', dates: 'Jul 2015 – Jun 2021', note: '' },
 ];
 
 export const skillGroups = [
-  { title: 'Languages & analysis', items: ['Python', 'SQL', 'R'] },
-  { title: 'Data engineering', items: ['PostgreSQL', 'dbt', 'ETL', 'Data modeling', 'PII pseudonymization'] },
-  { title: 'NLP & research', items: ['spaCy', 'BERTopic', 'SentenceTransformers', 'TF-IDF / SVD'] },
-  { title: 'Systems & delivery', items: ['FastAPI', 'Docker', 'GCP', 'Linux', 'HPC / SLURM', 'CI/CD', 'Tableau'] },
+  { title: 'Programming', items: ['Python', 'SQL', 'R', 'Bash', 'Git', 'Linux'] },
+  { title: 'Data engineering', items: ['ETL design', 'PostgreSQL', 'dbt', 'Schema design', 'Data modeling', 'PII pseudonymization', 'Faker', 'SDV'] },
+  { title: 'Cloud & MLOps', items: ['Docker', 'Docker Compose', 'GCP: Cloud Storage, Cloud Run, Vertex AI', 'DVC', 'Weights & Biases', 'LangChain', 'RAG', 'LoRA fine-tuning', 'Quantization', 'Kubernetes', 'CI/CD'] },
+  { title: 'Testing, HPC & visualization', items: ['unittest', 'Ruff', 'CI coverage gates', 'OSCAR HPC', 'SLURM', 'Tableau', 'Matplotlib'] },
+  { title: 'Machine learning & NLP', items: ['scikit-learn', 'TensorFlow', 'PyTorch', 'spaCy', 'SentenceTransformers', 'BERTopic', 'SHAP', 'GLMs', 'Cross-validation', 'Deep reinforcement learning'] },
+  { title: 'LLMs & serving', items: ['Ollama', 'Llama 3.2', 'Gemma', 'Mistral', 'Hugging Face', 'FastAPI', 'REST APIs', 'Streamlit', 'OCR pipelines'] },
 ];
 
 export const certifications = ['Foundations: Data, Data, Everywhere', 'Introduction to Cyber Attacks', 'Sales force', 'UiPath Automation Explorer', 'Foundations of Digital Marketing and E-commerce'];
