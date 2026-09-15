@@ -21,7 +21,7 @@ const descriptors = [
 ];
 
 const navItems = [
-  ['Home', '/'], ['Projects', '/#work'], ['Research', '/research'], ['Accolades', '/accolades'],
+  ['Home', '/'], ['Projects', '/projects'], ['Experience', '/experience'], ['Research', '/research'], ['Accolades', '/accolades'],
   ['Leadership', '/leadership'], ['Beyond Tech', '/beyond-tech'], ['Contact', '/#contact'],
 ];
 
@@ -238,11 +238,12 @@ function ContactSection() {
 }
 
 function HomePage() {
-  return <main><Hero/><AboutStrip/><WorkSection/><ResearchSection/><AccoladesSection/><MediaSection/><LeadershipSection/><InitiativeSection/><EventsSection/><ExperienceSection/><EducationSection/><SkillsSection/><CurrentResearch/><BeyondSection/><ContactSection/></main>;
+  return <main><Hero/><AboutStrip/><WorkSection/><ResearchSection/><AccoladesSection/><MediaSection/><LeadershipSection/><InitiativeSection/><EventsSection/><CurrentResearch/><BeyondSection/><ContactSection/></main>;
 }
 
 function PageHero({ eyebrow, title, intro, dark = false }) { return <section className={`page-hero ${dark?'dark':''}`}><p className="eyebrow">{eyebrow}</p><h1>{title}</h1><p>{intro}</p></section>; }
 function ProjectsPage() { return <main><PageHero eyebrow="Project archive" title="Things I’ve tried, tested, and learned from." intro="Projects across machine learning, statistical modeling, document intelligence, finance, and education research."/><WorkSection all/><ContactSection/></main>; }
+function ExperiencePage() { return <main><PageHero eyebrow="Experience & education" title="Where I’ve worked and learned." intro="Research appointments, internships, education, and the skills I bring to data science and engineering teams."/><ExperienceSection/><EducationSection/><SkillsSection/><ContactSection/></main>; }
 function ResearchPage() { return <main><PageHero dark eyebrow="Research archive" title="Questions I’ve explored." intro="Published work, a patent application, and ongoing research across healthcare, finance, NLP, and education."/><ResearchSection all/><ContactSection/></main>; }
 function AccoladesPage() { return <main><PageHero eyebrow="Accolades" title="A few moments that have meant a lot." intro="A record of the work, communities, and people behind each recognition."/><AccoladesSection all/><MediaSection/><ContactSection/></main>; }
 function LeadershipPage() { return <main><PageHero eyebrow="Leadership" title="Things I helped organize." intro="Student organizations, community work, events, and the teams that made each one possible."/><LeadershipSection all/><InitiativeSection/><EventsSection/><ContactSection/></main>; }
@@ -266,7 +267,7 @@ function NotFound() { return <main className="not-found"><p className="eyebrow">
 function Footer() { return <footer><span>© 2026 Akshaya Jayakanth</span><span>Data, ideas & a little bit of dessert.</span><a href={`mailto:${profile.email}`}><FiMail/>Say hello</a></footer>; }
 
 function AppShell() {
-  return <><ScrollManager/><Cursor/><Header/><Routes><Route path="/" element={<HomePage/>}/><Route path="/projects" element={<ProjectsPage/>}/><Route path="/projects/:slug" element={<ProjectDetail/>}/><Route path="/research" element={<ResearchPage/>}/><Route path="/research/:slug" element={<ResearchDetail/>}/><Route path="/accolades" element={<AccoladesPage/>}/><Route path="/leadership" element={<LeadershipPage/>}/><Route path="/beyond-tech" element={<BeyondPage/>}/><Route path="*" element={<NotFound/>}/></Routes><Footer/></>;
+  return <><ScrollManager/><Cursor/><Header/><Routes><Route path="/" element={<HomePage/>}/><Route path="/projects" element={<ProjectsPage/>}/><Route path="/experience" element={<ExperiencePage/>}/><Route path="/projects/:slug" element={<ProjectDetail/>}/><Route path="/research" element={<ResearchPage/>}/><Route path="/research/:slug" element={<ResearchDetail/>}/><Route path="/accolades" element={<AccoladesPage/>}/><Route path="/leadership" element={<LeadershipPage/>}/><Route path="/beyond-tech" element={<BeyondPage/>}/><Route path="*" element={<NotFound/>}/></Routes><Footer/></>;
 }
 
 export default function App() { return <BrowserRouter><AppShell/></BrowserRouter>; }
