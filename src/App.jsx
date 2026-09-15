@@ -5,7 +5,7 @@ import { FiArrowDownRight, FiArrowUpRight, FiGithub, FiLinkedin, FiMail, FiMenu,
 import { featuredProjects, projects } from './data/projects';
 import { publications } from './data/publications';
 import { events, leadership } from './data/leadership';
-import { accolades, experience, media, profile, teenClean } from './data/stories';
+import { accolades, certifications, education, experience, languages, media, profile, skillGroups, teenClean } from './data/stories';
 import './index.css';
 
 const MotionDiv = motion.div;
@@ -114,7 +114,7 @@ function Hero() {
       <div className="hero-orb orb-one" /><div className="hero-orb orb-two" />
       {['Python', 'NLP', 'ideas', 'SQL', 'research', 'AI'].map((word, i) => <span key={word} className={`float-word word-${i + 1}`}>{word}</span>)}
       <div className="hero-copy">
-        <MotionP className="hero-kicker" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: .2 }}>Data Scientist · ML Engineer · Researcher</MotionP>
+        <MotionP className="hero-kicker" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: .2 }}>Data Scientist · Data Engineer · Researcher</MotionP>
         <MotionH1 initial={{ opacity: 0, y: 35 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .9, ease: [.22, 1, .36, 1] }}>Hi, I’m <em>Akshaya.</em></MotionH1>
         <div className="descriptor-wrap" aria-live="polite">
           <AnimatePresence mode="wait">
@@ -122,7 +122,7 @@ function Hero() {
           </AnimatePresence>
         </div>
         <MotionP className="hero-support" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: .55 }}>
-          I’m an ScM Data Science student at Brown University. Lately, I’ve been working across machine learning, NLP, data systems, and education research.
+          I’m an ScM Data Science student at Brown University, graduating in May 2027, and a Graduate Research Assistant at the Annenberg Institute. I build data models, NLP pipelines, and reproducible workflows that make analysis trustworthy.
         </MotionP>
         <MotionDiv className="hero-actions" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .75 }}>
           <Link className="button button-dark" to="/#work">Browse projects <FiArrowDownRight /></Link>
@@ -149,6 +149,7 @@ function AboutStrip() {
 }
 
 function ProjectVisual({ type }) {
+  if (type === 'career') return <div className="project-visual document-visual"><p>CAREER READINESS AT BROWN</p><div className="flow-row">{['Exports', 'dbt staging', 'Validate', 'PostgreSQL', 'Tableau'].map((x, i) => <span key={x}><b>{x}</b>{i < 4 && <i>→</i>}</span>)}</div><div className="doc-sheet"><i/><i/><i/><i/></div></div>;
   if (type === 'education') return <div className="project-visual document-visual"><p>TEACHER NARRATIVE RESEARCH</p><div className="flow-row">{['Narratives', 'Clean', 'Themes', 'Link records', 'Study'].map((x, i) => <span key={x}><b>{x}</b>{i < 4 && <i>→</i>}</span>)}</div><div className="doc-sheet"><i/><i/><i/><i/></div></div>;
   if (type === 'clinical') return <div className="project-visual clinical-visual"><div className="clinical-head"><span>MODEL COMPARISON</span><span>SUPPORT2 · TEST SET</span></div><div className="model-board"><div><span>Gradient Boosting</span><i style={{width:'91.6%'}}/><b>0.916</b></div><div><span>XGBoost</span><i style={{width:'88%'}}/><b>evaluated</b></div><div><span>Random Forest</span><i style={{width:'82%'}}/><b>evaluated</b></div><div><span>Logistic Regression</span><i style={{width:'76%'}}/><b>baseline</b></div></div><div className="clinical-summary"><span><b>5</b> models compared</span><span><b>SHAP</b> explainability</span><span><b>40</b> automated tests</span></div></div>;
   if (type === 'cinema') return <div className="project-visual cinema-visual"><div className="marquee">NOW MODELING</div><div className="film-title">WIKIPEDIA<br/><em>at the movies</em></div><div className="signal-bars">{[72, 43, 83, 55, 94, 67].map((h, i) => <i key={i} style={{ height: `${h}%` }} />)}</div><div className="film-meta"><span>VIEWS</span><span>EDITORS</span><span>REVISIONS</span></div></div>;
@@ -215,9 +216,17 @@ function ExperienceSection() {
   return <section className="experience-section section-pad"><SectionHeading eyebrow="Experience" title="Places I’ve learned from."/><div className="timeline">{experience.map(job => <Reveal key={job.role+job.organization} className="timeline-item"><div className="timeline-date">{job.dates}</div><div><h3>{job.role}</h3><h4>{job.organization}</h4><p>{job.description}</p><div className="tags">{job.skills.map(x=><span key={x}>{x}</span>)}</div></div></Reveal>)}</div></section>;
 }
 
+function EducationSection() {
+  return <section className="education-section section-pad" id="education"><SectionHeading eyebrow="Education" title="Where I’m learning."/><div className="education-grid">{education.map(item => <Reveal key={item.organization} className="education-card"><p className="eyebrow">{item.dates}</p><h3>{item.organization}</h3><h4>{item.degree}</h4>{item.note && <p>{item.note}</p>}</Reveal>)}</div></section>;
+}
+
+function SkillsSection() {
+  return <section className="skills-section section-pad" id="skills"><SectionHeading eyebrow="Tools & continued learning" title="What I work with." intro="From raw exports to reproducible analysis: the tools I use to build, validate, and explain data systems."/><div className="skills-grid">{skillGroups.map(group => <Reveal key={group.title} className="skill-card"><h3>{group.title}</h3><div className="tags">{group.items.map(item => <span key={item}>{item}</span>)}</div></Reveal>)}</div><div className="learning-grid"><Reveal><h3>Certifications</h3><ul>{certifications.map(item => <li key={item}>{item}</li>)}</ul></Reveal><Reveal><h3>Languages</h3><ul>{languages.map(item => <li key={item}>{item}</li>)}</ul></Reveal></div></section>;
+}
+
 function CurrentResearch() {
   const nodes = ['Teacher narratives', 'Topic modeling', 'Transformers', 'Administrative data', 'Teacher attrition'];
-  return <section className="curious-section section-pad"><div className="curious-copy"><p className="eyebrow">Currently curious about...</p><h2>What teachers say, and what it can tell us about who stays.</h2><p>At Brown’s Annenberg Institute, I’m linking themes from tens of thousands of induction narratives with Connecticut administrative records to study early-career attrition.</p></div><div className="network" aria-label="Research concept network"><div className="network-core">research<br/>question</div>{nodes.map((n,i)=><MotionSpan key={n} className={`node node-${i+1}`} animate={{ y: [0,-7,0] }} transition={{ repeat: Infinity, duration: 3+i*.35, ease:'easeInOut' }}>{n}</MotionSpan>)}<i className="net-line n1"/><i className="net-line n2"/><i className="net-line n3"/><i className="net-line n4"/><i className="net-line n5"/></div></section>;
+  return <section className="curious-section section-pad"><div className="curious-copy"><p className="eyebrow">Currently curious about...</p><h2>What teachers say, and what it can tell us about who stays.</h2><p>At Brown’s Annenberg Institute, I run preprocessing, embedding, and BERTopic pipelines over 100,000+ Connecticut TEAM administrative records on OSCAR HPC. The work began as my capstone and continued as a Graduate Research Assistant appointment, with the project now extending to Indiana and California.</p></div><div className="network" aria-label="Research concept network"><div className="network-core">research<br/>question</div>{nodes.map((n,i)=><MotionSpan key={n} className={`node node-${i+1}`} animate={{ y: [0,-7,0] }} transition={{ repeat: Infinity, duration: 3+i*.35, ease:'easeInOut' }}>{n}</MotionSpan>)}<i className="net-line n1"/><i className="net-line n2"/><i className="net-line n3"/><i className="net-line n4"/><i className="net-line n5"/></div></section>;
 }
 
 function BeyondSection({ full = false }) {
@@ -225,11 +234,11 @@ function BeyondSection({ full = false }) {
 }
 
 function ContactSection() {
-  return <section className="contact-section section-pad" id="contact"><p className="eyebrow">08 — Let’s connect</p><h2>If something here made you curious,<br/><em>say hello.</em></h2><a className="contact-email" href={`mailto:${profile.email}`} data-cursor="WRITE">{profile.email}<FiArrowUpRight /></a><div className="contact-links"><a href={profile.github} target="_blank" rel="noreferrer"><FiGithub/>GitHub</a><a href={profile.linkedin} target="_blank" rel="noreferrer"><FiLinkedin/>LinkedIn</a><a href={profile.medium} target="_blank" rel="noreferrer">Medium</a><a href={profile.resume} target="_blank" rel="noreferrer">Résumé</a></div></section>;
+  return <section className="contact-section section-pad" id="contact"><p className="eyebrow">08 — Let’s connect</p><h2>If something here made you curious,<br/><em>say hello.</em></h2><a className="contact-email" href={`mailto:${profile.email}`} data-cursor="WRITE">{profile.email}<FiArrowUpRight /></a><p className="contact-availability">Open to Data Scientist and Data Engineer roles · Providence, Rhode Island</p><div className="contact-links"><a href={`mailto:${profile.personalEmail}`}>Personal email</a><a href={profile.github} target="_blank" rel="noreferrer"><FiGithub/>GitHub</a><a href={profile.linkedin} target="_blank" rel="noreferrer"><FiLinkedin/>LinkedIn</a><a href={profile.medium} target="_blank" rel="noreferrer">Medium</a><a href={profile.resume} target="_blank" rel="noreferrer">Résumé</a></div></section>;
 }
 
 function HomePage() {
-  return <main><Hero/><AboutStrip/><WorkSection/><ResearchSection/><AccoladesSection/><MediaSection/><LeadershipSection/><InitiativeSection/><EventsSection/><ExperienceSection/><CurrentResearch/><BeyondSection/><ContactSection/></main>;
+  return <main><Hero/><AboutStrip/><WorkSection/><ResearchSection/><AccoladesSection/><MediaSection/><LeadershipSection/><InitiativeSection/><EventsSection/><ExperienceSection/><EducationSection/><SkillsSection/><CurrentResearch/><BeyondSection/><ContactSection/></main>;
 }
 
 function PageHero({ eyebrow, title, intro, dark = false }) { return <section className={`page-hero ${dark?'dark':''}`}><p className="eyebrow">{eyebrow}</p><h1>{title}</h1><p>{intro}</p></section>; }

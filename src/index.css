@@ -168,3 +168,16 @@ footer { padding:27px max(5vw,24px); display:flex; justify-content:space-between
 }
 
 @media (prefers-reduced-motion: reduce) { *,*::before,*::after { scroll-behavior:auto!important; animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; } }
+
+.education-section { background: var(--blush); }
+.education-grid, .skills-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.education-card, .skill-card { padding: 32px; border: 1px solid var(--line); background: var(--cream); }
+.education-card h3, .skill-card h3, .learning-grid h3 { font: 500 1.8rem/1.2 var(--serif); }
+.education-card h4 { font-size: 14px; font-weight: 500; }
+.education-card p:last-child { color: var(--muted); margin-bottom: 0; }
+.learning-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px; margin-top: 48px; }
+.learning-grid ul { padding-left: 20px; color: var(--brown); }
+.learning-grid li { margin-bottom: 12px; }
+.contact-availability { margin-top: 28px; color: #d9c8cf; }
+.contact-links { flex-wrap: wrap; }
+@media (max-width: 800px) { .education-grid, .skills-grid, .learning-grid { grid-template-columns: 1fr; } .education-card, .skill-card { padding: 24px; } }

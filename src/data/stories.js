@@ -15,13 +15,32 @@ export const media = [
 ];
 
 export const experience = [
-  { role: 'Student Research Assistant', organization: 'Brown University · Center for Career Exploration', dates: 'Jun 2026 – Present', description: 'Building relational data models and modular Python/SQL ETL on Brown’s OSCAR HPC cluster for career-engagement and outcomes research.', skills: ['SQL', 'ETL', 'Data Modeling', 'HPC'] },
-  { role: 'Capstone Researcher', organization: 'Annenberg Institute at Brown University', dates: 'Jun 2026 – Present', description: 'Applying topic modeling and transformer-based classification to teacher-induction narratives linked with administrative data.', skills: ['NLP', 'Transformers', 'Topic Modeling'] },
-  { role: 'AI/ML Intern', organization: 'In22labs', dates: 'Aug 2024 – Jan 2025', description: 'Built a multi-format document QA pipeline, moved inference to local Llama 3.2, and created a university partnership that grew the team by 17 interns.', skills: ['FastAPI', 'OCR', 'LLMs', 'Ollama'] },
-  { role: 'Data Analytics Intern', organization: 'Agasthya Data Solution', dates: 'Jun – Jul 2023', description: 'Engineered time-series features across five years of NIFTY50 price and volume data, supporting published portfolio research.', skills: ['Python', 'SQL', 'Financial Analytics'] },
+  { role: 'Graduate Research Assistant', organization: 'Annenberg Institute at Brown University', dates: 'Sep 2026 – Present', description: 'Continuing the TEAM project after my ScM capstone: running preprocessing, embeddings, and BERTopic analysis over 100,000+ Connecticut administrative records as SLURM jobs on OSCAR. I validate incoming schemas, review cleaning and embedding reports, and document reproducible workflows. The project now extends to Indiana and California.', skills: ['Python', 'BERTopic', 'SentenceTransformers', 'SLURM', 'HPC'] },
+  { role: 'NLP Capstone Researcher', organization: 'Annenberg Institute at Brown University', dates: 'Jun – Aug 2026', description: 'Built preprocessing and embedding pipelines for Connecticut TEAM records, including HTML decoding, markup stripping, date normalization, and spaCy NER pseudonymization. Compared TF-IDF/SVD with sentence-transformer embeddings and presented the architecture and cleaning approach to stakeholders.', skills: ['NLP', 'spaCy', 'TF-IDF', 'SentenceTransformers', 'GitHub'] },
+  { role: 'Student Research Assistant', organization: 'Brown University · Lizzie and Jonathan Tisch Center for Career Exploration', dates: 'Jun – Aug 2026', description: 'Designed the Career Readiness at Brown relational schema and ETL pipelines, integrating five years of engagement and outcome data into an access-controlled PostgreSQL repository. Fixed a Handshake export mismatch in dbt staging, added PII pseudonymization and synthetic test data, and connected the repository to Tableau. Changes shipped through PR review, Ruff, unittest, and CI coverage gates.', skills: ['PostgreSQL', 'dbt', 'Python', 'SQL', 'Tableau', 'CI/CD'] },
+  { role: 'AI/ML Intern', organization: 'In22labs', dates: 'Aug 2024 – Jan 2025', description: 'Migrated document QA from the OpenAI API to self-hosted open-source models with 2.7-second median response latency. Built FastAPI ingestion with OCR for four file formats and benchmarked Llama 3.2, Gemma, and Mistral. Negotiated an SRM University partnership and recruited and onboarded 17 interns across two batches.', skills: ['FastAPI', 'OCR', 'LLMs', 'Ollama'] },
+  { role: 'Data Science Intern', organization: 'Agastya Data Solutions', dates: 'Jun 2023', description: 'Built a holding-period return prediction tool using five years of NIFTY 50 constituent data, with data cleaning, exploratory analysis, and visual reports. This dataset became the basis for my published deep reinforcement learning portfolio optimization paper.', skills: ['Python', 'SQL', 'Financial Analytics'] },
 ];
 
+export const education = [
+  { organization: 'Brown University', degree: 'ScM in Data Science', dates: 'Aug 2025 – May 2027', note: 'Expected graduation: May 2027.' },
+  { organization: 'Harvard University', degree: 'Cross-registered graduate coursework', dates: 'Sep – Dec 2026', note: 'Faculty of Arts and Sciences · Applied Computation: Advanced Practical Data Science, MLOps.' },
+  { organization: 'SRM University', degree: 'BTech in Computer Science with Big Data Analysis', dates: '2021 – 2025', note: '' },
+  { organization: 'M.Ct.M Chiddambaram Chetteyar International School', degree: 'High School Diploma', dates: 'Jul 2015 – Jun 2021', note: '' },
+];
+
+export const skillGroups = [
+  { title: 'Languages & analysis', items: ['Python', 'SQL', 'R'] },
+  { title: 'Data engineering', items: ['PostgreSQL', 'dbt', 'ETL', 'Data modeling', 'PII pseudonymization'] },
+  { title: 'NLP & research', items: ['spaCy', 'BERTopic', 'SentenceTransformers', 'TF-IDF / SVD'] },
+  { title: 'Systems & delivery', items: ['FastAPI', 'Docker', 'GCP', 'Linux', 'HPC / SLURM', 'CI/CD', 'Tableau'] },
+];
+
+export const certifications = ['Foundations: Data, Data, Everywhere', 'Introduction to Cyber Attacks', 'Sales force', 'UiPath Automation Explorer', 'Foundations of Digital Marketing and E-commerce'];
+export const languages = ['English · Native or bilingual', 'Tamil · Native or bilingual', 'French · Limited working', 'Hindi · Elementary', 'German · Elementary'];
+
 export const profile = {
+  personalEmail: 'akshayajayakanth@gmail.com',
   name: 'Akshaya Jayakanth', email: 'akshaya_jayakanth@brown.edu',
   github: 'https://github.com/akshayajay', linkedin: 'https://www.linkedin.com/in/akshayajayakanth/',
   medium: 'https://medium.com/@akshayajayakanth',
